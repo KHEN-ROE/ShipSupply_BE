@@ -1,6 +1,6 @@
 package com.shipsupply.security;
 
-import lombok.RequiredArgsConstructor;
+import com.shipsupply.service.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +12,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
+//    @Autowired
+//    JwtTokenProvider jwtTokenProvider;
+
+    private final JwtTokenProvider jwtTokenProvider;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+
     @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, CustomOAuth2UserService customOAuth2UserService) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,27 +37,26 @@ public class SecurityConfig {
                 .csrf().disable()
                 // jwt token으로 생성하므로 세션은 필요 없으므로 생성 안함.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
-                    .oauth2Login() // 시큐리티가 OAuth2.0 로그인 과정 처리하도록 설정 - 이게 맨 처음 와야되는 것 같은데
-                    .defaultSuccessUrl("http://localhost:3000", true) // 로그인 성공시 이동할 URL을 설정
-                    // 이 때, 스프링 시큐리티는 구글 인증 서버로부터 받은 인증 코드를 이용해
-                    // 구글 OAuth 2.0 인증 서버에 액세스 토큰을 요청하고 얻어서 사용자정보 얻어옴
-                    // 클라이언트 ID와 시크릿이 사용됨
-                    // 스프링 시큐리티가 이 과정을 자동으로 처리
-                    .failureUrl("/loginFailure")
                 .and()
                 .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
-                // 회원가입과 로그인은 인증 없어도 접근 가능. 그래서 필터에 아직 안 걸렸다?
+                //  Spring Security 필터 체인을 통과하지만
+                    //인증 없이도 접근이 허용됨. 사용자는 이 경로로 요청을 보낼 때 별도로 인증 절차를 거치지 않아도 됨
                 .antMatchers("/", "/oauth2/**", "/api/user/join", "/api/user/login").permitAll()
                 // 그 외 나머지 요청은 모두 인증된 회원만 접근 가능
                 .anyRequest().authenticated()
-                
+                    .and()
+                    .oauth2Login()
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService)
+                    .and()
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureUrl("/loginFailure")
                 .and()
                 // jwt token 필터를 id/password 인증 필터 전에 넣는다.
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                    // JWT 토큰을 이용한 인증을 처리하기 위한 필터
+                    // 요청이 들어올 때마다 JWT 토큰을 확인하여 사용자를 인증.
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), // antMatchers().permitAll()에 있는 요청들은 이 필터 거치지 않는다
                         UsernamePasswordAuthenticationFilter.class);
-
             return http.build();
     }
-
 }

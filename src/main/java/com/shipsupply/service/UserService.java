@@ -1,12 +1,10 @@
 package com.shipsupply.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
 import com.shipsupply.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +22,6 @@ public class UserService {
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
-
-
-    @Value("${jwt.secret}")
-    private String secretKey;
-
-    private final Long expiredMs = 1000 * 60 * 60l;
 
     public String join(User user) {
         Optional<User> findUser = ur.findById(user.getId());
@@ -51,16 +43,20 @@ public class UserService {
     }
 
     public String login(User user) {
-        try {
-            User findUser = ur.findById(user.getId()).get();
-            if (!encoder.matches(user.getPassword(), findUser.getPassword())) {
-                return "PASSWORD_FAIL";
-            }else {
+
+        Optional<User> findUser = ur.findById(user.getId());
+        if(findUser.isPresent()) {
+            User u = findUser.get();
+            if(encoder.matches(user.getPassword(), u.getPassword())){
                 System.out.println("로그인 성공");
-                return JwtTokenProvider.createToken(findUser.getUserName());
+                String token = JwtTokenProvider.createToken(u.getUserName());
+                System.out.println("토큰 : " + token);
+                return token;
+            }else {
+                throw new RuntimeException("비밀번호 불일치");
             }
-        } catch (Exception e) {
-            return "USERNAME_FAIL";
+        }else {
+            throw new RuntimeException("존재하지 않는 회원");
         }
     }
 }
