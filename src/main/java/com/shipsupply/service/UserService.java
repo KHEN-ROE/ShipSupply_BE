@@ -33,7 +33,7 @@ public class UserService {
             }
         } else {
             u.setId(user.getId());
-            u.setUserName(user.getUserName());
+            u.setUsername(user.getUsername());
             u.setEmail(user.getEmail());
             u.setPassword(encoder.encode(user.getPassword()));
             System.out.println("저장할 user 정보:" + user);
@@ -49,7 +49,7 @@ public class UserService {
             User u = findUser.get();
             if(encoder.matches(user.getPassword(), u.getPassword())){
                 System.out.println("로그인 성공");
-                String token = JwtTokenProvider.createToken(u.getUserName());
+                String token = JwtTokenProvider.createToken(u.getUsername());
                 System.out.println("토큰 : " + token);
                 return token;
             }else {
