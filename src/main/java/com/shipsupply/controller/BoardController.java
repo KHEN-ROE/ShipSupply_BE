@@ -27,15 +27,16 @@ public class BoardController {
 
     @PostMapping("/add")
     public Board addBoard(@RequestBody Board board) {
+        System.out.println("받은 게시글 정보 : " + board);
         return bs.addBoard(board);
     }
 
-    @PutMapping("/update")
-    public Board updateBoard(@RequestBody Board board, @RequestBody Long seq) {
-        return bs.updateBoard(board, seq);
+    @PutMapping("/update/{seq}")
+    public Board updateBoard(@PathVariable Long seq, @RequestBody Board board) {
+        return bs.updateBoard(seq, board);
     }
 
-    @DeleteMapping("/delete{seq}")
+    @DeleteMapping("/delete/{seq}")
     public void deleteBoard(@PathVariable Long seq, @RequestBody Board board) {
         bs.deleteBoard(seq, board);
     }

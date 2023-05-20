@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/user")
@@ -42,6 +40,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.login(user));
     }
 
+    //로그아웃 컨트롤러 생성해야 함
+
     @PutMapping("/update")
     public ResponseEntity<User> update(@RequestBody User user) {
         System.out.println("수정할 회원 정보 : " + user);
@@ -53,7 +53,4 @@ public class UserController {
         System.out.println("삭제할 회원 정보 : " + user);
         userService.delete(user);
     }
-
-
-
 }

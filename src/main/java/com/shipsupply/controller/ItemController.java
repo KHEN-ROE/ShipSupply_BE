@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/item")
 @RestController
 public class ItemController {
 
     @Autowired
     ItemService itemService;
 
-    @GetMapping("/api/getItems")
+    @GetMapping("/getItems")
     public ResponseEntity<List<Item>> getItems() {
         return ResponseEntity.ok().body(itemService.getItems());
     }
 
-    @PostMapping("/api/addItem")
+    @PostMapping("/addItem")
     public ResponseEntity<Item> addItem(@RequestBody Item item) {
         return ResponseEntity.ok().body(itemService.addItem(item));
     }

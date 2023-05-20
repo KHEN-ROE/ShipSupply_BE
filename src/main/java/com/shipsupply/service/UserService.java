@@ -46,6 +46,7 @@ public class UserService {
             u.setEmail(user.getEmail());
             u.setPassword(encoder.encode(user.getPassword()));
             u.setUsername(user.getUsername());
+            u.setRole(user.getRole());
             ur.save(u);
         }
         return "join 호출";
@@ -59,7 +60,8 @@ public class UserService {
             if (encoder.matches(user.getPassword(), u.getPassword())) {
                 System.out.println("받은 로그인 정보 : " + user);
                 System.out.println("로그인 성공");
-                String token = JwtTokenProvider.createToken(u.getUsername());
+                System.out.println("토큰에 저장할 정보 : " + u.getUsername() + "," + u.getRole());
+                String token = JwtTokenProvider.createToken(u.getUsername(), u.getRole());
                 System.out.println("생성한 토큰 : " + token);
                 return token;
             } else {
@@ -75,7 +77,7 @@ public class UserService {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if (u.getId().equals(user.getId())) {
+            if (u.getPassword().equals(user.getPassword())) {
                 u.setPassword(user.getPassword());
                 u.setEmail(user.getEmail());
                 u.setUsername(user.getUsername());
@@ -91,7 +93,7 @@ public class UserService {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if (u.getEmail().equals(user.getEmail())) {
+            if (u.getPassword().equals(user.getPassword())) {
                 ur.deleteById(user.getId());
             }else {
                 throw new RuntimeException("권한이 없습니다.");

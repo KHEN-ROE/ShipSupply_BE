@@ -40,14 +40,15 @@ public class BoardService {
             User u = findUser.get();
             board.setUser(u); // user엔티티와 board 엔티티의 관계를 설정해준다.
                                 //// db에 저장될 때 Board테이블의 user컬럼에 해당 사용자의 id를 외래키로 저장
+            System.out.println("추가할 내용 : " + board);
+            br.save(board);
         }else {
             throw new RuntimeException("해당하는 사용자 없음");
         }
-        System.out.println("추가할 내용 : " + board);
-        return br.save(board);
+        return null;
     }
 
-    public Board updateBoard(Board board, Long seq) {
+    public Board updateBoard(Long seq, Board board) {
         String id = board.getUser().getId();
         Optional<User> findUser = ur.findById(id);
         if (findUser.isPresent()) {
