@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/item")
@@ -24,6 +25,11 @@ public class ItemController {
     @PostMapping("/addItem")
     public ResponseEntity<Item> addItem(@RequestBody Item item) {
         return ResponseEntity.ok().body(itemService.addItem(item));
+    }
+
+    @PostMapping("/predict")
+    public ResponseEntity<String> getCategory(@RequestBody Map<String, String> data) {
+        return ResponseEntity.ok().body(itemService.getCategory(data));
     }
 
 }

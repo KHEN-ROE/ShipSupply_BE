@@ -1,6 +1,5 @@
 package com.shipsupply.security;
 
-import com.shipsupply.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -10,16 +9,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
@@ -53,7 +49,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     // Jwt 토큰으로 인증 정보 조회
     public Authentication getAuthentication(String token) {
         System.out.println("getAuthentication 호출");
-        // 토큰에서 권한 정보를 가져와서 권한 목록을 생성합니다.
+        // 토큰에서 권한 정보를 가져와서 권한 목록을 생성.
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         System.out.println("claims : " + claims);
         Collection<GrantedAuthority> authorities =
@@ -64,9 +60,6 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
 
         return new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
 
-
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // Jwt 토큰에서 회원 구별 정보 추출
@@ -85,9 +78,6 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
             return token;
         }
         return token;
-//        String token = req.getHeader("AUTH-TOKEN");
-//        System.out.println("리액트에서 준 토큰 : " + token);
-//        return token;
     }
 
     // Jwt 토큰의 유효성 + 만료일자 확인

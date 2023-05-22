@@ -6,9 +6,12 @@ import com.shipsupply.security.JwtTokenProvider;
 import com.shipsupply.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.codec.Decoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -77,7 +80,7 @@ public class UserService {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if (u.getPassword().equals(user.getPassword())) {
+            if (encoder.matches(user.getPassword(), u.getPassword())) {
                 u.setPassword(user.getPassword());
                 u.setEmail(user.getEmail());
                 u.setUsername(user.getUsername());
@@ -90,10 +93,12 @@ public class UserService {
     }
 
     public void delete(User user) {
+        System.out.println("user 비밀번호 : " + user.getPassword());
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if (u.getPassword().equals(user.getPassword())) {
+            System.out.println("findUser 비밀번호 : " + u.getPassword()); // db에있는 암호화된 비번 가져옴. 반면 받는 건 그냥 raw비번
+            if (encoder.matches(user.getPassword(), u.getPassword())) {
                 ur.deleteById(user.getId());
             }else {
                 throw new RuntimeException("권한이 없습니다.");
