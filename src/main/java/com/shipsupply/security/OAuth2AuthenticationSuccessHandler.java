@@ -30,7 +30,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.addHeader("Authorization", "Bearer " + token);
 
         clearAuthenticationAttributes(request);
-        
+
         // 토큰을 담아서 리다이렉트
         String redirectUrl = "http://localhost:3000/login?token=" + token;
 //        String redirectUrl = "http://localhost:3000/login?token=";

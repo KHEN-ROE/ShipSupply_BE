@@ -3,15 +3,11 @@ package com.shipsupply.service;
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
 import com.shipsupply.security.JwtTokenProvider;
-import com.shipsupply.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.codec.Decoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletOutputStream;
-import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -74,6 +70,10 @@ public class UserService {
         } else {
             throw new RuntimeException("존재하지 않는 회원");
         }
+    }
+
+    public User logout(User user) {
+        return null;
     }
 
     public User update(User user) {
