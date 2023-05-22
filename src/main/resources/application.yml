@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ship?serverTimezone=Asia/Seoul
-    username: ken
-    password: 1234
+    username: 
+    password: 
 
   jpa:
     hibernate:
@@ -19,8 +19,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 1050135280688-bgoki6c46rsshsbm68ru5mh075qnhlvn.apps.googleusercontent.com
-            client-secret: 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
+            client-id: 
+            client-secret: 
 
 
 jwt:
