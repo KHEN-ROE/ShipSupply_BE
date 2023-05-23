@@ -24,6 +24,7 @@ public class CommentController {
         return commentService.addComment(comment);
     }
 
+
     @PutMapping("/update/{seq}")
     public Comment updateComment(@PathVariable Long seq, @RequestBody Comment comment) {
         System.out.println("updateComment 호출" + seq + "," + comment);

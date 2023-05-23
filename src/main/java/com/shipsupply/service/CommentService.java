@@ -25,10 +25,11 @@ public class CommentService {
 
     // 댓글은 모든 사람이 다 볼 수 있어야 함. 근데 비밀 댓글인 경우?(이건 나중에) + 대댓글은?
     public List<Comment> getComment() {
-        return commentRepository.findAll();
+        return commentRepository.findAllByOrderByHitCountDesc();
     }
 
     public Comment addComment(Comment comment) {
+        // 댓글 작성자가 db에 있는 회원인지 확인
         Optional<User> findUser = userRepository.findById(comment.getUser().getId());
         if (findUser.isPresent()) {
             User user = findUser.get();

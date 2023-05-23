@@ -25,7 +25,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oauth2User = delegate.loadUser(userRequest);
 
         String provider = userRequest.getClientRegistration().getRegistrationId();
-        String providerId = oauth2User.getAttribute("sub");  // "sub"는 Google에서 제공하는 사용자의 고유 ID입니다.
+        String providerId = oauth2User.getAttribute("sub");  // "sub"는 Google에서 제공하는 사용자의 고유 ID.
         String email = oauth2User.getAttribute("email");
 
         // 이미 가입한 사용자인지 확인

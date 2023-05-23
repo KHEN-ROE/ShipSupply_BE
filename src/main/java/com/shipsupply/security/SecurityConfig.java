@@ -14,9 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity //(debug = true)
 public class SecurityConfig {
 
-//    @Autowired
-//    JwtTokenProvider jwtTokenProvider;
-
     private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -46,7 +43,8 @@ public class SecurityConfig {
                 // 이 메서드는 사용자의 권한을 나타내는 GrantedAuthority 객체의 컬렉션을 반환함
                 // 따라서, hasAnyRole("USER", "ADMIN") 설정은 실제로는 사용자의 GrantedAuthority 목록에 
                 // "ROLE_USER" 혹은 "ROLE_ADMIN"이 포함되어 있는지 확인하는 것임
-                .antMatchers("/api/board/**").hasAnyRole("USER", "ADMIN") // 이 메서드는 내부적으로 "ROLE_" 접두사를 자동으로 추가
+                .antMatchers("/api/board/**", "/api/comment/**").hasAnyRole("USER", "ADMIN") // 이 메서드는 내부적으로 "ROLE_" 접두사를 자동으로 추가
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 // 그 외 나머지 요청은 모두 인증된 회원만 접근 가능
                 .anyRequest().authenticated()
                 .and()

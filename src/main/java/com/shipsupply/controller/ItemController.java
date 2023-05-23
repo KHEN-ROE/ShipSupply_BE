@@ -27,8 +27,9 @@ public class ItemController {
         return ResponseEntity.ok().body(itemService.addItem(item));
     }
 
-    @PostMapping("/predict")
+    @PostMapping("/predict/classify")
     public ResponseEntity<String> getCategory(@RequestBody Map<String, String> data) {
+        System.out.println("클라이언트에서 준 data : " + data);
         return ResponseEntity.ok().body(itemService.getCategory(data));
     }
 

@@ -35,7 +35,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String redirectUrl = "http://localhost:3000/login?token=" + token;
 //        String redirectUrl = "http://localhost:3000/login?token=";
 
-
         // 응답을 리다이렉트 URL로 보냄
         response.sendRedirect(redirectUrl);
     }
