@@ -31,11 +31,11 @@ public class HitService {
     }
 
     public Hit addHit(Hit hit) {
-        Optional<Hit> existingHit = hitRepository.findByUserIdAndCommentNum(hit.getUser().getId(), hit.getComment().getNum());
+        Optional<Hit> existingHit = hitRepository.findByUserIdAndCommentId(hit.getUser().getId(), hit.getComment().getId());
         if (existingHit.isPresent()) {
             throw new RuntimeException("좋아요는 한번만 가능합니다");
         } else {
-            Comment comment = commentRepository.findById(hit.getComment().getNum()).get();
+            Comment comment = commentRepository.findById(hit.getComment().getId()).get();
             comment.setHitCount(comment.getHitCount() + 1);
             commentRepository.save(comment);
         }
@@ -43,7 +43,7 @@ public class HitService {
     }
 
     public void deleteHit(Hit hit) {
-        Comment comment = commentRepository.findById(hit.getComment().getNum()).get();
+        Comment comment = commentRepository.findById(hit.getComment().getId()).get();
         comment.setHitCount(comment.getHitCount() - 1);
         commentRepository.save(comment);
 

@@ -3,6 +3,7 @@ package com.shipsupply.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -12,7 +13,7 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "userId")
     @Setter
     private String id;
     @Setter
@@ -30,5 +31,17 @@ public class User {
     // 사용자의 소셜로그인 아이디
     @Setter
     private String providerId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 
 }

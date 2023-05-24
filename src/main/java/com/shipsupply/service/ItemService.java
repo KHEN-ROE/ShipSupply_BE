@@ -32,6 +32,7 @@ public class ItemService {
         String flaskUrl = "http://localhost:5000/api/item/predict/classify";
 
         // RestTemplate 객체 생성
+        // HTTP 통신을 위한 클래스. 이것을 WebClient로 바꿀 수 있다(비동기통신으로)
         RestTemplate restTemplate = new RestTemplate();
 
         // HTTP Headers 설정
@@ -46,6 +47,11 @@ public class ItemService {
 
         HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
 
+        // RestTemplate은 스프링에서 다른 서버로 HTTP요청을 보내고 응답을 받기 위한 클래스
+        // restTemplate을 이용하여 POST 요청을 보내고(postForEntity) 결과를 POJO(Plain Old Java Object)로 반환.
+        // 받은 POJO를 자동으로 자바 객체로 변환해줌
+        // POJO(Plain Old Java Object)는 특정 규약, 프레임워크, 기술 등에 종속되지 않는 일반적인 Java 객체
+        // String.class -> 요청의 응답 데이터가 String 타입
         ResponseEntity<String> response = restTemplate.postForEntity(flaskUrl, request, String.class);
 
         return response.getBody();

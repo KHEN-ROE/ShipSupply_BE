@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -13,7 +14,7 @@ import java.util.Date;
 public class Comment {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long num; //num 말고 id 쓰는게 관례
+    private Long id; //num 말고 id 쓰는게 관례
     @Setter
     private String text;
     @Setter
@@ -23,12 +24,24 @@ public class Comment {
 
     // 작성한 user의 id
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "userId")
     private User user;
 
     // 어느 게시글에서 쓴 건지
     @ManyToOne 
-    @JoinColumn(name = "seq")
+    @JoinColumn(name = "boardId")
     private Board board;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comment comment )) return false;
+        return Objects.equals(getId(), comment.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 
 }

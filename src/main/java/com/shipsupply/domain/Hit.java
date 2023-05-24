@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -15,12 +16,25 @@ public class Hit {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hit;
 
-    @ManyToOne @JoinColumn(name = "id")
+    @ManyToOne @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne @JoinColumn(name = "seq")
+    @ManyToOne @JoinColumn(name = "boardId")
     private Board board;
 
-    @ManyToOne @JoinColumn(name = "num")
+    @ManyToOne @JoinColumn(name = "commentId")
     private Comment comment;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Hit hit)) return false;
+        return Objects.equals(getHit(), hit.getHit());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getHit());
+    }
+
 }
