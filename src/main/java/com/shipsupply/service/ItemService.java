@@ -29,6 +29,7 @@ public class ItemService {
     }
 
     public String getCategory(Map<String, String> data) {
+
         String flaskUrl = "http://localhost:5000/api/item/predict/classify";
 
         // RestTemplate 객체 생성
