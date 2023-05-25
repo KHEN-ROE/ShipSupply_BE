@@ -3,7 +3,6 @@ package com.shipsupply.service;
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
 import com.shipsupply.security.UserPrincipal;
-import org.hibernate.engine.transaction.jta.platform.internal.SunOneJtaPlatform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

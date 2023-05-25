@@ -24,8 +24,8 @@ public class BoardService {
         return br.findAll();
     }
 
-    public Board getBoard(Long seq) {
-        Optional<Board> findBoard = br.findById(seq);
+    public Board getBoard(Long id) {
+        Optional<Board> findBoard = br.findById(id);
         Board b = new Board();
         if(findBoard.isPresent()) {
             b = findBoard.get();
@@ -48,18 +48,19 @@ public class BoardService {
         return null;
     }
 
-    public Board updateBoard(Long seq, Board board) {
-        String id = board.getUser().getId();
-        Optional<User> findUser = ur.findById(id);
+    public Board updateBoard(Long id, Board board) {
+        String userId = board.getUser().getId();
+        Optional<User> findUser = ur.findById(userId);
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if(u.getId().equals(board.getUser().getId())){
-                Optional<Board> findBoard = br.findById(seq);
+            if(u.getId().equals(board.getUser().getId())){ // 유저정보 일치하면
+                Optional<Board> findBoard = br.findById(id); // 해당 게시글 탐색
                 if (findBoard.isPresent()) {
                     Board b = findBoard.get();
-                    b.setTitle(board.getTitle());
-                    b.setText(board.getText());
-                    b.setDate(new Date());
+                    Optional.ofNullable(board.getTitle()).ifPresent(b::setTitle);
+                    Optional.ofNullable(board.getText()).ifPresent(b::setText);
+                    Optional.ofNullable(board.getDate()).ifPresent(b::setDate);
+
                     return br.save(b);
                 }
             }
@@ -69,13 +70,13 @@ public class BoardService {
         return null;
     }
 
-    public void deleteBoard(Long seq, Board board) {
-        String id = board.getUser().getId();
-        Optional<User> findUser = ur.findById(id);
+    public void deleteBoard(Long id, Board board) {
+        String userId = board.getUser().getId();
+        Optional<User> findUser = ur.findById(userId);
         if (findUser.isPresent()) {
             User u = findUser.get();
             if(u.getId().equals(board.getUser().getId())){
-                br.deleteById(seq);
+                br.deleteById(id);
             }
         }
     }

@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -20,15 +21,33 @@ public class ItemService {
     @Autowired
     ItemRepository itemRepository;
 
+    //모든 아이템 리스트 출력(안 씀)
     public List<Item> getItems() {
         return itemRepository.findAll();
     }
 
+    //아이템 추가 메서드(이것도 안 씀)
     public Item addItem(Item item) {
         return itemRepository.save(item);
     }
 
-    public String getCategory(Map<String, String> data) {
+    // db에 있는 카테고리 조회
+    public List<Item> getCategory(Item item) {
+        return itemRepository.findByCategoryContaining(item.getCategory());
+    }
+
+    // db에 있는 선용품 조회
+    public List<Item> getItem(Item item) {
+        return itemRepository.findByItemContaining(item.getItem());
+    }
+
+    // 특정 카테고리에 해당하는 선용품 조회
+    public List<Item> getCateAndItem(Item item) {
+        return itemRepository.findByCategoryAndItem(item.getCategory(), item.getItem());
+    }
+
+
+    public String predCategory(Map<String, String> data) {
 
         String flaskUrl = "http://localhost:5000/api/item/predict/classify";
 
@@ -57,4 +76,5 @@ public class ItemService {
 
         return response.getBody();
     }
+
 }

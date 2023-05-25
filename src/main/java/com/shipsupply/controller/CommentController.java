@@ -25,14 +25,14 @@ public class CommentController {
     }
 
 
-    @PutMapping("/update/{seq}")
-    public Comment updateComment(@PathVariable Long seq, @RequestBody Comment comment) {
-        System.out.println("updateComment 호출" + seq + "," + comment);
-        return commentService.updateComment(seq, comment);
+    @PutMapping("/update/{id}")
+    public Comment updateComment(@PathVariable Long id, @RequestBody Comment comment) {
+        System.out.println("updateComment 호출" + id + "," + comment);
+        return commentService.updateComment(id, comment);
     }
 
-    @DeleteMapping("/delete/{seq}")
-    public void deleteComment(@PathVariable Long seq, @RequestBody Comment comment) {
-        commentService.deleteComment(seq, comment);
+    @DeleteMapping("/delete/{id}")
+    public void deleteComment(@PathVariable Long id, @RequestBody Comment comment) {
+        commentService.deleteComment(id, comment);
     }
 }

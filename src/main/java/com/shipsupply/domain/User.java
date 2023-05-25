@@ -19,6 +19,8 @@ public class User {
     @Setter
     private String password;
     @Setter
+    private String newPassword;
+    @Setter
     private String email;
     @Setter
     private String username;

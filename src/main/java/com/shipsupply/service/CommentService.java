@@ -45,31 +45,36 @@ public class CommentService {
         return comment;
     }
 
-    public Comment updateComment(Long seq, Comment comment) {
+    public Comment updateComment(Long id, Comment comment) {
 
         Optional<User> findUser = userRepository.findById(comment.getUser().getId());
-        Comment co = new Comment();
         if (findUser.isPresent()) {
             User user = findUser.get();
             if(encoder.matches(comment.getUser().getPassword(), user.getPassword())) {
-                Optional<Comment> c = commentRepository.findById(seq);
+                Optional<Comment> c = commentRepository.findById(id);
                 if (c.isPresent()) {
-                    co = c.get();
-                    co.setText(comment.getText());
-                    co.setDate(comment.getDate());
-                    commentRepository.save(co);
+                    Comment co = c.get();
+                    Optional.ofNullable(comment.getText()).ifPresent(co::setText);
+                    Optional.ofNullable(comment.getDate()).ifPresent(co::setDate);
+//                    Optional.ofNullable(comment.getHitCount()).ifPresent(co::setHitCount); // 초깃값을 0L로 설정해두었기 때문에 없어도 됨
+                    return commentRepository.save(co);
+                }else {
+                    throw new RuntimeException("존재하지 않는 댓글");
                 }
+            }else {
+                throw new RuntimeException("비밀번호 불일치");
             }
+        }else {
+            throw new RuntimeException("존재하지 않는 사용자");
         }
-        return co;
     }
 
-    public void deleteComment(Long seq, Comment comment) {
+    public void deleteComment(Long id, Comment comment) {
         Optional<User> findUser = userRepository.findById(comment.getUser().getId());
         if (findUser.isPresent()) {
             User user = findUser.get();
             if(encoder.matches(comment.getUser().getPassword(), user.getPassword())){
-                commentRepository.deleteById(seq);
+                commentRepository.deleteById(id);
             }
         }
     }
