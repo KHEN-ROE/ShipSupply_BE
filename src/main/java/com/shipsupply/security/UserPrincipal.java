@@ -33,7 +33,6 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         UserPrincipal userPrincipal = new UserPrincipal(user);
         userPrincipal.setAttributes(attributes);
         return userPrincipal;
-//        return new UserPrincipal(user, attributes);
     }
 
     @Override

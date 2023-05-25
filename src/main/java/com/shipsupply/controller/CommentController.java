@@ -2,6 +2,8 @@ package com.shipsupply.controller;
 
 import com.shipsupply.domain.Comment;
 import com.shipsupply.service.CommentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/comment")
 public class CommentController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
     @Autowired
     CommentService commentService;
@@ -27,7 +31,7 @@ public class CommentController {
 
     @PutMapping("/update/{id}")
     public Comment updateComment(@PathVariable Long id, @RequestBody Comment comment) {
-        System.out.println("updateComment 호출" + id + "," + comment);
+        logger.info("받은 댓글 정보 : {}", comment);
         return commentService.updateComment(id, comment);
     }
 

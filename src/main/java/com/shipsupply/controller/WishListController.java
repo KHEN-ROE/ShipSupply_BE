@@ -27,19 +27,16 @@ public class WishListController {
 
     @PostMapping("/add")
     public WishList addList(@RequestBody WishList wishList) {
-        System.out.println("받은 위시리스트 : " + wishList);
         return wishListService.addList(wishList);
     }
 
     @PutMapping("/update")
     public WishList updateList(@RequestBody WishList wishList) {
-        System.out.println("받은 수정 목록 : " + wishList);
         return wishListService.updateList(wishList);
     }
 
     @DeleteMapping("/delete")
     public void deleteList(@RequestBody WishList wishList) {
-        System.out.println("받은 삭제 목록 : " + wishList);
         wishListService.deleteList(wishList);
     }
 

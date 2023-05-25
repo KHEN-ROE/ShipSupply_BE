@@ -49,13 +49,10 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
 
     // Jwt 토큰으로 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        System.out.println("getAuthentication 호출");
         // 토큰에서 권한 정보를 가져와서 권한 목록을 생성.
         Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
-        System.out.println("claims : " + claims);
         Collection<GrantedAuthority> authorities =
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + claims.get("role").toString()));
-        System.out.println("authorities : " + authorities);
         org.springframework.security.core.userdetails.User principal =
                 new org.springframework.security.core.userdetails.User(this.getUserPk(token), "", authorities);
 
@@ -65,17 +62,14 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
 
     // Jwt 토큰에서 회원 구별 정보 추출
     public String getUserPk(String token) {
-        System.out.println("getUserPk 호출");
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     // Request의 Header에서 token 파싱
     public String resolveToken(HttpServletRequest req) {
-        System.out.println("resolveToken 호출");
         String token = req.getHeader("Authorization");
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             token = token.substring(7, token.length());
-            System.out.println("리액트에서 준 토큰 : " + token);
             return token;
         }
         return token;
@@ -83,7 +77,6 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
 
     // Jwt 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
-        System.out.println("validateToken 호출");
         try {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());

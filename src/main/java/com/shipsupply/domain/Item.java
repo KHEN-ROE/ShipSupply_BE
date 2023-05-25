@@ -15,7 +15,7 @@ import java.util.Objects;
 @ToString
 public class Item {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //seq 말고 id 쓰는게 관례
     private String item;
     private String assembly;
@@ -24,6 +24,9 @@ public class Item {
     private Long leadtime;
     private String machinery;
     private String partNo1;
+    private String currency;
+    private Long price;
+
 
     @Override
     public boolean equals(Object o) {

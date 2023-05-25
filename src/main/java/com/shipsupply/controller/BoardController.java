@@ -2,15 +2,18 @@ package com.shipsupply.controller;
 
 import com.shipsupply.domain.Board;
 import com.shipsupply.service.BoardService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/board")
 public class BoardController {
+
+    private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
     @Autowired
     BoardService bs;
@@ -27,7 +30,8 @@ public class BoardController {
 
     @PostMapping("/add")
     public Board addBoard(@RequestBody Board board) {
-        System.out.println("받은 게시글 정보 : " + board);
+
+        logger.info("받은 게시글 정보 : {}", board);
         return bs.addBoard(board);
     }
 

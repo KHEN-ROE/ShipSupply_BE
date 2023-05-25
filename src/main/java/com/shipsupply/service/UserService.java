@@ -4,6 +4,8 @@ import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
 import com.shipsupply.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class UserService {
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public User inquire(User user) {
         Optional<User> findUser = ur.findById(user.getId());
@@ -57,14 +61,10 @@ public class UserService {
         if (findUser.isPresent()) {
             User u = findUser.get();
             if (encoder.matches(user.getPassword(), u.getPassword())) {
-                System.out.println("받은 로그인 정보 : " + user);
-                System.out.println("로그인 성공");
-                System.out.println("토큰에 저장할 정보 : " + u.getUsername() + "," + u.getRole());
                 String token = JwtTokenProvider.createToken(u.getUsername(), u.getRole());
-                System.out.println("생성한 토큰 : " + token);
+                logger.info("생성한 토큰 : {}" , token);
                 return token;
             } else {
-                System.out.println("받은 로그인 정보 : " + user);
                 throw new RuntimeException("비밀번호 불일치");
             }
         } else {
@@ -84,7 +84,7 @@ public class UserService {
                 // ofNullable -> null이 아니면 ()안의 값으로 변경. null이면 Optional.empty() 반환
                 // ifPresent -> 값이 있으면() 안의 값 사용. 여기서는 기존값 그대로 둠. ::는 메서드 레퍼런스
                 Optional.ofNullable(user.getNewPassword()).ifPresent(p -> u.setPassword(encoder.encode(p))); // p는 임시 매개변수 이름. 딴걸로 바꿔도 됨
-                                                                                                             // 람다식 쓴 이유는 암호화 때문에   
+                                                                                                             // 람다식 쓴 이유는 암호화 때문에
                 Optional.ofNullable(user.getEmail()).ifPresent(u::setEmail); // setEmail 메서드 직접참조 (email) -> u.setEmail(email)과 동일
                 Optional.ofNullable(user.getUsername()).ifPresent(u::setUsername);
                 Optional.ofNullable(user.getRole()).ifPresent(u::setRole);
@@ -103,7 +103,6 @@ public class UserService {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            System.out.println("findUser 비밀번호 : " + u.getPassword()); // db에있는 암호화된 비번 가져옴. 반면 받는 건 그냥 raw비번
             if (encoder.matches(user.getPassword(), u.getPassword())) {
                 ur.deleteById(user.getId());
             }else {
