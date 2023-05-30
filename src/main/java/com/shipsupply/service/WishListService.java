@@ -26,7 +26,7 @@ public class WishListService {
         return wishListRepository.save(wishList);
     }
 
-    public WishList updateList(WishList wishList) { // 필드를 안 보내면 db에서 null로 바뀜
+    public WishList updateList(WishList wishList) { // 필드를 안 보내면 db에서 null로 바뀜 -> 해결
         Optional<WishList> findWishList = wishListRepository.findById(wishList.getId());
         if(findWishList.isPresent()) {
             WishList w = findWishList.get();

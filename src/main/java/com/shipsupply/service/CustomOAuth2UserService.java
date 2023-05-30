@@ -2,7 +2,9 @@ package com.shipsupply.service;
 
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
-import com.shipsupply.security.UserPrincipal;
+import com.shipsupply.security.user.UserPrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomOAuth2UserService.class);
+    
     @Autowired
     private UserRepository userRepository;
 
@@ -24,6 +28,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
+        logger.info("OAuth2User loadUser 호출");
+        
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oauth2User = delegate.loadUser(userRequest);
 
@@ -48,6 +54,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     return userRepository.save(newUser);
                 });
 
-        return UserPrincipal.create(user, oauth2User.getAttributes());
+        return UserPrincipal.create(user, oauth2User.getAttributes()); //소셜 계정으로  로그인하면 유저 상세정보 생성
     }
 }

@@ -1,5 +1,8 @@
-package com.shipsupply.security;
+package com.shipsupply.security.config;
 
+import com.shipsupply.security.jwt.JwtAuthenticationFilter;
+import com.shipsupply.security.jwt.JwtTokenProvider;
+import com.shipsupply.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.shipsupply.service.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

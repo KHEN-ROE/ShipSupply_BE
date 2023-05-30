@@ -1,8 +1,10 @@
-package com.shipsupply.security;
+package com.shipsupply.security.user;
 
 
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailService.class);
+
     @Autowired
     UserRepository userRepository;
 
@@ -21,6 +25,8 @@ public class CustomUserDetailService implements UserDetailsService {
     // 조회 결과를 UserDetails 타입의 객체로 변환해서 리턴
     @Override
     public UserDetails loadUserByUsername(String email) {
+        
+        logger.info("loadUserByUsername 호출");
         User u = new User();
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {

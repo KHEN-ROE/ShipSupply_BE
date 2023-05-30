@@ -1,6 +1,9 @@
 package com.shipsupply.service;
 
 import com.shipsupply.domain.Item;
+import com.shipsupply.dto.CategoryDTO;
+import com.shipsupply.dto.CompanyDTO;
+import com.shipsupply.dto.ItemDTO;
 import com.shipsupply.persistence.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -13,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -21,32 +23,42 @@ public class ItemService {
     @Autowired
     ItemRepository itemRepository;
 
-    //모든 아이템 리스트 출력(안 씀)
+    //모든 아이템 리스트 출력
     public List<Item> getItems() {
         return itemRepository.findAll();
     }
 
-    //아이템 추가 메서드(이것도 안 씀)
-    public Item addItem(Item item) {
-        return itemRepository.save(item);
+    // 검색창에서 카테고리만 출력
+    public List<CategoryDTO> getCategoriesByKeyword(String category) {
+        return itemRepository.findByCategoryLike(category);
     }
 
-    // db에 있는 카테고리 조회
-    public List<Item> getCategory(Item item) {
-        return itemRepository.findByCategoryContaining(item.getCategory());
+    // 검색창에서 발주처만 출력
+    public List<CompanyDTO> getCompaniesByKeyword(String company) {
+        return itemRepository.findByCompanyLike(company);
     }
 
-    // db에 있는 선용품 조회
-    public List<Item> getItem(Item item) {
-        return itemRepository.findByItemContaining(item.getItem());
+    // 검색창에서 부품명만 출력
+    public List<ItemDTO> getItemByKeyword(String item) {
+        return itemRepository.findByItemLike(item);
     }
 
-    // 특정 카테고리에 해당하는 선용품 조회
-    public List<Item> getCateAndItem(Item item) {
-        return itemRepository.findByCategoryAndItem(item.getCategory(), item.getItem());
+    // 특정 카테고리를 포함하는 모든 행 출력
+    public List<Item> findByCategory(String category) {
+        return itemRepository.findByCategoryContaining(category);
     }
 
+    // 특정 부품명 포함하는 모든 행 출력
+    public List<Item> findByItem(String item) {
+        return itemRepository.findByItemContaining(item);
+    }
 
+    // 특정 발주처 포함하는 모든 행 출력
+    public List<Item> findByCompany(String company) {
+        return itemRepository.findByCompanyContaining(company);
+    }
+
+    // 카테고리 예측
     public String predCategory(Map<String, String> data) {
 
         String flaskUrl = "http://localhost:5000/api/item/predict/classify";

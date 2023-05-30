@@ -23,25 +23,24 @@ public class BoardController {
         return bs.getList();
     }
 
-    @GetMapping("/view/{seq}")
-    public Board getBoard(@PathVariable Long seq) {
-        return bs.getBoard(seq);
+    @GetMapping("/view/{id}")
+    public Board getBoard(@PathVariable Long id) {
+        return bs.getBoard(id);
     }
 
     @PostMapping("/add")
     public Board addBoard(@RequestBody Board board) {
-
         logger.info("받은 게시글 정보 : {}", board);
         return bs.addBoard(board);
     }
 
-    @PutMapping("/update/{seq}")
-    public Board updateBoard(@PathVariable Long seq, @RequestBody Board board) {
-        return bs.updateBoard(seq, board);
+    @PutMapping("/update/{id}")
+    public Board updateBoard(@PathVariable Long id, @RequestBody Board board) {
+        return bs.updateBoard(id, board);
     }
 
-    @DeleteMapping("/delete/{seq}")
-    public void deleteBoard(@PathVariable Long seq, @RequestBody Board board) {
-        bs.deleteBoard(seq, board);
+    @DeleteMapping("/delete/{id}")
+    public void deleteBoard(@PathVariable Long id, @RequestBody Board board) {
+        bs.deleteBoard(id, board);
     }
 }

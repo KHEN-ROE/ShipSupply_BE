@@ -2,7 +2,7 @@ package com.shipsupply.service;
 
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
-import com.shipsupply.security.JwtTokenProvider;
+import com.shipsupply.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +27,8 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public User inquire(User user) {
-        Optional<User> findUser = ur.findById(user.getId());
+    public User inquire(String id) {
+        Optional<User> findUser = ur.findById(id);
         User u = new User();
         if (findUser.isPresent()) {
             u = findUser.get();
@@ -61,6 +61,7 @@ public class UserService {
         if (findUser.isPresent()) {
             User u = findUser.get();
             if (encoder.matches(user.getPassword(), u.getPassword())) {
+                logger.info("userService에서 createToken 호출");
                 String token = JwtTokenProvider.createToken(u.getUsername(), u.getRole());
                 logger.info("생성한 토큰 : {}" , token);
                 return token;
