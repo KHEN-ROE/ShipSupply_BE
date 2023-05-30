@@ -89,4 +89,30 @@ public class ItemService {
         return response.getBody();
     }
 
+    public String predLeadtime(Map<String, String> data) {
+
+        String flaskUrl = "http://localhost:5000/api/item/predict/regression";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("a", data.get("Subject"));
+        map.put("b", data.get("ship"));
+        map.put("c", data.get("key2"));
+        map.put("d", data.get("Assembly"));
+        map.put("e", data.get("currency"));
+        map.put("f", data.get("company"));
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(flaskUrl, request, String.class);
+
+
+
+        return response.getBody();
+    }
+
 }

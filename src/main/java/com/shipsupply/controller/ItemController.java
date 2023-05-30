@@ -78,6 +78,10 @@ public class ItemController {
     }
 
     // 회귀 모델 예측
-
+    @PostMapping("/predict/regression")
+    public ResponseEntity<String> predLeadtime(@RequestBody Map<String, String> data) {
+        logger.info("리액트에서 준 data : {}", data);
+        return ResponseEntity.ok().body(itemService.predLeadtime(data));
+    }
 
 }
