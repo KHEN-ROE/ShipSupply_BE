@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.reactive.TransactionalOperatorExtensionsKt;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
@@ -55,6 +56,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     public String resolveToken(HttpServletRequest req) {
         logger.info("resolveToken 호출");
         String token = req.getHeader("Authorization");
+        logger.info("받은 토큰 : " + token);
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             token = token.substring(7, token.length());
             return token;

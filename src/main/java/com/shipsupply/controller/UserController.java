@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody User user) {
-        return ResponseEntity.ok().body(userService.join(user));
+    public User join(@RequestBody User user) {
+        return userService.join(user);
     }
 
     @PostMapping("/login")
@@ -42,14 +42,10 @@ public class UserController {
 
     // JWT 토큰은 상태가 없는 토큰이기 때문에 한번 발급된 토큰을 서버에서 직접 파기하는 것은 불가능.
     // 토큰을 삭제하는 방법은 1. 클라이언트 측에서 삭제 / 2. 서버에 블랙리스트 만들어서 해당 토큰 등록.
-    @PostMapping("/logout")
-    public ResponseEntity<User> logout(@RequestBody User user){
-        return ResponseEntity.ok().body(userService.logout(user));
-    }
 
     @PutMapping("/update")
-    public ResponseEntity<User> update(@RequestBody User user) {
-        return ResponseEntity.ok().body(userService.update(user));
+    public User update(@RequestBody User user) {
+        return userService.update(user);
     }
 
     @DeleteMapping("/delete")

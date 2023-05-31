@@ -20,8 +20,6 @@ import java.util.Map;
 @RestController
 public class ItemController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
-
     @Autowired
     ItemService itemService;
 
@@ -45,10 +43,10 @@ public class ItemController {
         return itemService.getCompaniesByKeyword(company);
     }
 
-    // 검색 창에서 부품명 검색
+    // 검색 창에서 용품명 검색
     @GetMapping("/getItemName")
     public List<ItemDTO> getItemByKeyword(@RequestParam String item) {
-        log.info("받은 부품명 : " + item);
+        log.info("받은 용품명 : " + item);
         return itemService.getItemByKeyword(item);
     }
 
@@ -73,14 +71,14 @@ public class ItemController {
     // 분류모델 예측
     @PostMapping("/predict/classify")
     public ResponseEntity<String> predCategory(@RequestBody Map<String, String> data) {
-        logger.info("리액트에서 준 data : {}", data);
+        log.info("리액트에서 준 data : {}", data);
         return ResponseEntity.ok().body(itemService.predCategory(data));
     }
 
     // 회귀 모델 예측
     @PostMapping("/predict/regression")
     public ResponseEntity<String> predLeadtime(@RequestBody Map<String, String> data) {
-        logger.info("리액트에서 준 data : {}", data);
+        log.info("리액트에서 준 data : {}", data);
         return ResponseEntity.ok().body(itemService.predLeadtime(data));
     }
 

@@ -1,7 +1,6 @@
 package com.shipsupply.domain;
 
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.util.Objects;

@@ -4,6 +4,7 @@ import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
 import com.shipsupply.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class UserService {
         return null;
     }
 
-    public String join(User user) {
+    public User join(User user) {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             throw new RuntimeException("이미 존재하는 아이디");
@@ -50,13 +51,11 @@ public class UserService {
             u.setPassword(encoder.encode(user.getPassword()));
             u.setUsername(user.getUsername());
             u.setRole(user.getRole());
-            ur.save(u);
+            return ur.save(u);
         }
-        return "join 호출";
     }
 
     public String login(User user) {
-
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
@@ -71,10 +70,6 @@ public class UserService {
         } else {
             throw new RuntimeException("존재하지 않는 회원");
         }
-    }
-
-    public User logout(User user) {
-        return null;
     }
 
     public User update(User user) {
@@ -95,12 +90,12 @@ public class UserService {
             }else {
                 throw new RuntimeException("권한이 없습니다.");
             }
+        } else {
+            throw new RuntimeException("존재하지 않는 사용자");
         }
-        return null;
     }
 
     public void delete(User user) {
-        System.out.println("user 비밀번호 : " + user.getPassword());
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();

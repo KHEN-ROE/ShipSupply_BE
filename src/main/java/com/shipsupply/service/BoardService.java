@@ -7,6 +7,7 @@ import com.shipsupply.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +24,12 @@ public class BoardService {
         return br.findAll();
     }
 
-    public Board getBoard(Long id) {
+    public Board getBoard(Long id, User user) {
         Optional<Board> findBoard = br.findById(id);
         Board b = new Board();
         if(findBoard.isPresent()) {
             b = findBoard.get();
+
         }
         return b;
     }
@@ -39,11 +41,11 @@ public class BoardService {
             User u = findUser.get();
             board.setUser(u); // user엔티티와 board 엔티티의 관계를 설정해준다.
                                 //// db에 저장될 때 Board테이블의 user컬럼에 해당 사용자의 id를 외래키로 저장
-            br.save(board);
+            board.setDate(new Date());
+            return br.save(board);
         }else {
             throw new RuntimeException("해당하는 사용자 없음");
         }
-        return null;
     }
 
     public Board updateBoard(Long id, Board board) {

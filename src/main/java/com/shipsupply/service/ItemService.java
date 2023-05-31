@@ -110,8 +110,6 @@ public class ItemService {
 
         ResponseEntity<String> response = restTemplate.postForEntity(flaskUrl, request, String.class);
 
-
-
         return response.getBody();
     }
 
