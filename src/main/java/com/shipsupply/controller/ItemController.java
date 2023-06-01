@@ -53,18 +53,21 @@ public class ItemController {
     // 특정 카테고리 포함하는 모든 행 출력
     @GetMapping("/findByCategory")
     public List<Item> findByCategory(@RequestParam String category) {
+        log.info("받은 카테고리명 : " + category);
         return itemService.findByCategory(category);
     }
 
     // 특정 부품명을 포함하는 모든 행 출력
     @GetMapping("/findByItem")
     public List<Item> findByItem(@RequestParam String item) {
+        log.info("받은 아이템 : " + item);
         return itemService.findByItem(item);
     }
 
     // 특정 발주처를 포함하는 모든 행 출력
     @GetMapping("/findByCompany")
     public List<Item> findByCompany(@RequestParam String company) {
+        log.info("받은 발주처 : " + company);
         return itemService.findByCompany(company);
     }
 

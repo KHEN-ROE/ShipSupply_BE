@@ -26,8 +26,7 @@ public class CommentService {
 
     // 댓글은 모든 사람이 다 볼 수 있어야 함. 근데 비밀 댓글인 경우?(이건 나중에) + 대댓글은?
     public List<Comment> getComment(Long boardId) {
-        return commentRepository.findAllByBoardId(boardId);
-
+        return commentRepository.findAllByBoardIdOrderByHitCountDesc(boardId);
     }
 
     public Comment addComment(Comment comment) {

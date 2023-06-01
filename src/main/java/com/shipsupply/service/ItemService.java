@@ -5,6 +5,7 @@ import com.shipsupply.dto.CategoryDTO;
 import com.shipsupply.dto.CompanyDTO;
 import com.shipsupply.dto.ItemDTO;
 import com.shipsupply.persistence.ItemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class ItemService {
 
@@ -109,6 +111,7 @@ public class ItemService {
         HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity(flaskUrl, request, String.class);
+        log.info("리드타임 : " + response);
 
         return response.getBody();
     }
