@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +25,9 @@ public class CommentService {
     BCryptPasswordEncoder encoder;
 
     // 댓글은 모든 사람이 다 볼 수 있어야 함. 근데 비밀 댓글인 경우?(이건 나중에) + 대댓글은?
-    public List<Comment> getComment() {
-        return commentRepository.findAllByOrderByHitCountDesc();
+    public List<Comment> getComment(Long boardId) {
+        return commentRepository.findAllByBoardId(boardId);
+
     }
 
     public Comment addComment(Comment comment) {
@@ -34,7 +36,7 @@ public class CommentService {
         if (findUser.isPresent()) {
             User user = findUser.get();
             if(user.getId().equals(comment.getUser().getId())){
-                commentRepository.save(comment);
+                return commentRepository.save(comment);
             }
             else {
                 throw new RuntimeException("권한이 없습니다");
@@ -42,7 +44,6 @@ public class CommentService {
         }else {
             throw new RuntimeException("존재하지 않는 회원");
         }
-        return comment;
     }
 
     public Comment updateComment(Long id, Comment comment) {

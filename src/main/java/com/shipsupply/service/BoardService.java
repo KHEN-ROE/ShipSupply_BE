@@ -3,6 +3,8 @@ package com.shipsupply.service;
 import com.shipsupply.domain.Board;
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.BoardRepository;
+import com.shipsupply.persistence.CommentRepository;
+import com.shipsupply.persistence.HitRepository;
 import com.shipsupply.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,11 @@ public class BoardService {
         return br.findAll();
     }
 
-    public Board getBoard(Long id, User user) {
+    public Board getBoard(Long id) {
         Optional<Board> findBoard = br.findById(id);
         Board b = new Board();
         if(findBoard.isPresent()) {
             b = findBoard.get();
-
         }
         return b;
     }

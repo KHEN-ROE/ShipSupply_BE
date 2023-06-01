@@ -18,9 +18,10 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @GetMapping("/get")
-    public List<Comment> getComment() {
-        return commentService.getComment();
+    @GetMapping("/get/{boardId}")
+    public List<Comment> getComment(@PathVariable Long boardId) {
+        logger.info("글번호 : " + boardId);
+        return commentService.getComment(boardId);
     }
 
     @PostMapping("/add")

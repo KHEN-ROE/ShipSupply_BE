@@ -26,8 +26,8 @@ public class BoardController {
     }
 
     @GetMapping("/view/{id}")
-    public Board getBoard(@PathVariable Long id, @RequestParam User user) {
-        logger.info("글 번호 : " + id + "," + "user정보 : " + user);
+    public Board getBoard(@PathVariable Long id) {
+        logger.info("글 번호 : " + id);
         return bs.getBoard(id);
     }
 

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -55,7 +57,9 @@ public class UserService {
         }
     }
 
-    public String login(User user) {
+    public Map<String, Object> login(User user) {
+        Map<String, Object> map = new HashMap<>();
+
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
@@ -63,7 +67,10 @@ public class UserService {
                 logger.info("userService에서 createToken 호출");
                 String token = JwtTokenProvider.createToken(u.getUsername(), u.getRole());
                 logger.info("생성한 토큰 : {}" , token);
-                return token;
+                map.put("token", token);
+                map.put("userId", u.getId());
+
+                return map;
             } else {
                 throw new RuntimeException("비밀번호 불일치");
             }

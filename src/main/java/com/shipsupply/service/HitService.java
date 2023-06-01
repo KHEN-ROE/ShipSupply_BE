@@ -26,8 +26,8 @@ public class HitService {
     @Autowired
     CommentRepository commentRepository;
 
-    public Long getHit(Long num) {
-        return commentRepository.findById(num).get().getHitCount();
+    public Long getHit(Long commentId) {
+        return commentRepository.findById(commentId).get().getHitCount();
     }
 
     public Hit addHit(Hit hit) {

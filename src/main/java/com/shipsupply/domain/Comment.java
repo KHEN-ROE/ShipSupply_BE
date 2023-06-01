@@ -1,9 +1,13 @@
 package com.shipsupply.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -30,7 +34,13 @@ public class Comment {
     // 어느 게시글에서 쓴 건지
     @ManyToOne 
     @JoinColumn(name = "boardId")
+//    @JsonIgnore
     private Board board;
+
+    @Setter
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Hit> hits;
 
     @Override
     public boolean equals(Object o) {

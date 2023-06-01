@@ -16,13 +16,14 @@ public class HitController {
     @Autowired
     HitService hitService;
 
-    @GetMapping("/get/{num}")
-    public Long getHit(@PathVariable Long num) {
-        return hitService.getHit(num);
+    @GetMapping("/get/{commentId}")
+    public Long getHit(@PathVariable Long commentId) {
+        return hitService.getHit(commentId);
     }
 
     @PostMapping("/add")
     public Hit addHit(@RequestBody Hit hit) {
+        logger.info("받은 hit 정보 : " + hit);
         return hitService.addHit(hit);
     }
 

@@ -1,5 +1,8 @@
 package com.shipsupply.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,9 +22,11 @@ public class Hit {
     private User user;
 
     @ManyToOne @JoinColumn(name = "boardId")
+    @JsonIgnore
     private Board board;
 
     @ManyToOne @JoinColumn(name = "commentId")
+//    @JsonIgnore
     private Comment comment;
 
     @Override
