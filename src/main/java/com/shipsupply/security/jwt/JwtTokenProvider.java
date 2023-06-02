@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.reactive.TransactionalOperatorExtensionsKt;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;

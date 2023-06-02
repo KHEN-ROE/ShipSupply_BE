@@ -4,7 +4,6 @@ import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
 import com.shipsupply.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +43,12 @@ public class UserService {
 
     public User join(User user) {
         Optional<User> findUser = ur.findById(user.getId());
+        Optional<User> findEmail = ur.findByEmail(user.getEmail());
         if (findUser.isPresent()) {
             throw new RuntimeException("이미 존재하는 아이디");
-        }else {
+        } else if (findEmail.isPresent()) {
+            throw new RuntimeException("이미 존재하는 이메일");
+        } else {
             User u = new User();
             u.setId(user.getId());
             u.setEmail(user.getEmail());
