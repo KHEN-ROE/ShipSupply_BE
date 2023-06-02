@@ -47,7 +47,7 @@ public class SecurityConfig {
                 // 따라서, hasAnyRole("USER", "ADMIN") 설정은 실제로는 사용자의 GrantedAuthority 목록에 
                 // "ROLE_USER" 혹은 "ROLE_ADMIN"이 포함되어 있는지 확인하는 것임
                 .antMatchers("/api/board/**", "/api/comment/**", "/api/item/**").hasAnyRole("USER", "ADMIN") // 이 메서드는 내부적으로 "ROLE_" 접두사를 자동으로 추가
-                .antMatchers("/api/admin/**").hasRole("ADMIN")7
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 // 그 외 나머지 요청은 모두 인증된 회원만 접근 가능
                 .anyRequest().authenticated()
                 .and()
