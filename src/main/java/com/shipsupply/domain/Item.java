@@ -25,6 +25,8 @@ public class Item {
     private String machinery;
     private String partNo1;
     private String currency;
+    private String ship;
+    private String subject;
     private Long price;
 
 

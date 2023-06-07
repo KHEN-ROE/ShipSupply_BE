@@ -50,7 +50,7 @@ public class CommentService {
         Optional<User> findUser = userRepository.findById(comment.getUser().getId());
         if (findUser.isPresent()) {
             User user = findUser.get();
-            if(encoder.matches(comment.getUser().getPassword(), user.getPassword())) {
+            if(comment.getUser().getId().equals(user.getId())) { // 파라미터로 받은 값과 db에 있는 유저 비교
                 Optional<Comment> c = commentRepository.findById(id);
                 if (c.isPresent()) {
                     Comment co = c.get();
@@ -62,7 +62,7 @@ public class CommentService {
                     throw new RuntimeException("존재하지 않는 댓글");
                 }
             }else {
-                throw new RuntimeException("비밀번호 불일치");
+                throw new RuntimeException("사용자 정보 불일치");
             }
         }else {
             throw new RuntimeException("존재하지 않는 사용자");
@@ -73,7 +73,7 @@ public class CommentService {
         Optional<User> findUser = userRepository.findById(comment.getUser().getId());
         if (findUser.isPresent()) {
             User user = findUser.get();
-            if(encoder.matches(comment.getUser().getPassword(), user.getPassword())){
+            if(comment.getUser().getId().equals(user.getId())){
                 commentRepository.deleteById(id);
             }
         }

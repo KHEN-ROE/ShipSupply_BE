@@ -38,6 +38,7 @@ public class CommentController {
 
     @DeleteMapping("/delete/{id}")
     public void deleteComment(@PathVariable Long id, @RequestBody Comment comment) {
+        logger.info("받은 정보 : " + id + "," + comment);
         commentService.deleteComment(id, comment);
     }
 }

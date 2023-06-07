@@ -67,6 +67,9 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     public boolean validateToken(String jwtToken) {
         logger.info("validateToken 호출");
         try {
+            // parseClaimsHws 메서드가 디코딩 및 파싱
+            // setSigninKey로 넘어온 시크릿을 이용해 헤더와 페이로드를 서명한 후 token의 서명과 비교
+            // 위조되지 않았다면 페이로드(claims) 리턴
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
