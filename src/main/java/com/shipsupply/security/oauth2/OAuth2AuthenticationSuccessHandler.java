@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,12 +36,24 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String token = JwtTokenProvider.createToken(authentication.getName(), userRole);
         logger.info("생성한 oauth2 토큰: {}" , token);
 //         헤더에 토큰 포함하여 전달(토큰 전달 방법은 1. 헤더에 포함 2. 쿠키에 포함 3. 바디에 포함 3개가 있음)
-        response.addHeader("Authorization", "Bearer " + token); // 리다이렉트 말고 이렇게 헤더나 바디에 담아서 리턴하고 싶은데
 
-        clearAuthenticationAttributes(request);
+        // HttpOnly 쿠키에 토큰 추가
+        Cookie tokenCookie = new Cookie("Authorization", token);
+        tokenCookie.setHttpOnly(true);
+        tokenCookie.setPath("/"); // 모든 경로에서 쿠키 접근 허용
+        response.addCookie(tokenCookie);
+
+        Cookie userIdCookie = new Cookie("userId", authentication.getName());
+        userIdCookie.setHttpOnly(false);
+        tokenCookie.setPath("/");
+        response.addCookie(userIdCookie);
+
+        clearAuthenticationAttributes(request);  //인증 과정에서 저장된 세션을 정리
 
         // 토큰을 담아서 리다이렉트
-        String redirectUrl = "http://localhost:3000/login?token=" + token;
+//        String redirectUrl = "http://localhost:3000/login?token=" + token;
+
+        String redirectUrl = "http://localhost:3000";
 
         // 응답을 리다이렉트 URL로 보냄
         response.sendRedirect(redirectUrl);

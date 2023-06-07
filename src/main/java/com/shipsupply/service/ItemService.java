@@ -66,7 +66,7 @@ public class ItemService {
         String flaskUrl = "http://localhost:5000/api/item/predict/classify";
 
         // RestTemplate 객체 생성
-        // HTTP 통신을 위한 클래스. 이것을 WebClient로 바꿀 수 있다(비동기통신으로)
+        // HTTP 통신을 위한 클래스
         RestTemplate restTemplate = new RestTemplate();
 
         // HTTP Headers 설정

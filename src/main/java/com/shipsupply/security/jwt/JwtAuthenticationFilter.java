@@ -34,7 +34,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             throws IOException, ServletException {
         logger.info("doFilter 호출");
         // resolveToken : Request의 Header에서 token 파싱
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+//        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        String token = jwtTokenProvider.resolveTokenFromCookie((HttpServletRequest) request);
         // validateToken : Jwt 토큰의 유효성 + 만료일자 확인
         if (token != null && jwtTokenProvider.validateToken(token)) { // 로그인 요청시 토큰이 없어도 permitAll 돼있어서 여길 통과함
             // getAuthentication : Jwt 토큰으로 인증 정보 조회

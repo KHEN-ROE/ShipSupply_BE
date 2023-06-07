@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -36,10 +40,25 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user, HttpServletResponse response) {
         logger.info("로그인 컨트롤러 호출");
+
+        Map<String, Object> map = userService.login(user);
+
+        String token = (String) map.get("token");
+        logger.info("생성한 토큰 : " + token);
+
+        Cookie tokenCookie = new Cookie("Authorization", token);
+        tokenCookie.setHttpOnly(true);
+        tokenCookie.setPath("/"); // 쿠키의 경로를 모든 경로로 설정
+        tokenCookie.setDomain("localhost"); // 클라이언트 도메인 설정
+        response.addCookie(tokenCookie);
+        logger.info("리턴할 response : " + response);
+
+        return ResponseEntity.ok(map);
+
         // userService의 login 메서드를 호출하고, 그 결과를 HTTP 응답 본문으로 설정.
-        return ResponseEntity.ok().body(userService.login(user));
+//        return ResponseEntity.ok().body(userService.login(user));
     }
 
     // JWT 토큰은 상태가 없는 토큰이기 때문에 한번 발급된 토큰을 서버에서 직접 파기하는 것은 불가능.
