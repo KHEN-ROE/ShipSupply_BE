@@ -51,7 +51,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     newUser.setRole("USER");
                     newUser.setUsername(name);
 
-                    return userRepository.save(newUser);
+                    return userRepository.save(newUser); // db에 저장
                 });
 
         return UserPrincipal.create(user, oauth2User.getAttributes()); //소셜 계정으로  로그인하면 유저 상세정보 생성

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -43,15 +44,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         tokenCookie.setPath("/"); // 모든 경로에서 쿠키 접근 허용
         response.addCookie(tokenCookie);
 
-        Cookie userIdCookie = new Cookie("userId", authentication.getName());
+        // HttpOnly 쿠키가 아닌 쿠키에 userId 추가
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String userId = oAuth2User.getAttribute("email"); //"sub"는 고유 사용자 아이디를 나타내는 표준 claim
+        logger.info("소셜 계정 ID : " + userId);
+        Cookie userIdCookie = new Cookie("userId", userId);
+        logger.info("userIdCookie : " + userIdCookie);
         userIdCookie.setHttpOnly(false);
-        tokenCookie.setPath("/");
+        userIdCookie.setPath("/");
+        userIdCookie.setDomain("localhost"); // 클라이언트 도메인 설정. 없어도 되는듯
         response.addCookie(userIdCookie);
 
-        clearAuthenticationAttributes(request);  //인증 과정에서 저장된 세션을 정리
-
-        // 토큰을 담아서 리다이렉트
-//        String redirectUrl = "http://localhost:3000/login?token=" + token;
+        clearAuthenticationAttributes(request); //인증 과정에서 저장된 세션을 정리
 
         String redirectUrl = "http://localhost:3000";
 
