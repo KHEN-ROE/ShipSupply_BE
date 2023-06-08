@@ -52,18 +52,6 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
                 .compact();
     }
 
-    // Request의 Header에서 token 파싱
-//    public String resolveToken(HttpServletRequest req) {
-//        logger.info("resolveToken 호출");
-//        String token = req.getHeader("Authorization");
-//        logger.info("받은 토큰 : " + token);
-//        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-//            token = token.substring(7, token.length());
-//            return token;
-//        }
-//        return token;
-//    }
-
     public String resolveTokenFromCookie(HttpServletRequest request) {
         logger.info("resolveTokenFromCookie 호출");
         logger.info("받은 쿠키 : " + request);

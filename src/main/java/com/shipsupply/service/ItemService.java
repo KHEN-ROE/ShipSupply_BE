@@ -102,10 +102,10 @@ public class ItemService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, String> map = new HashMap<>();
-        map.put("a", data.get("Subject"));
+        map.put("a", data.get("subject"));
         map.put("b", data.get("ship"));
         map.put("c", data.get("key2"));
-        map.put("d", data.get("Assembly"));
+        map.put("d", data.get("assembly"));
         map.put("e", data.get("currency"));
         map.put("f", data.get("company"));
         HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
