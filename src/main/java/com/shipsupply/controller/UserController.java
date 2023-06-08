@@ -56,13 +56,8 @@ public class UserController {
         logger.info("리턴할 response : " + response);
 
         return ResponseEntity.ok(map);
-
-        // userService의 login 메서드를 호출하고, 그 결과를 HTTP 응답 본문으로 설정.
-//        return ResponseEntity.ok().body(userService.login(user));
     }
 
-    // JWT 토큰은 상태가 없는 토큰이기 때문에 한번 발급된 토큰을 서버에서 직접 파기하는 것은 불가능.
-    // 토큰을 삭제하는 방법은 1. 클라이언트 측에서 삭제 / 2. 서버에 블랙리스트 만들어서 해당 토큰 등록.
 
     @PutMapping("/update")
     public User update(@RequestBody User user) {
