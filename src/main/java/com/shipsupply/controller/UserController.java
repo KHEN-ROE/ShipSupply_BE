@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.authentication.rememberme.CookieTheftException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -56,6 +57,24 @@ public class UserController {
         logger.info("리턴할 response : " + response);
 
         return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<?> logout(@RequestBody User user, HttpServletResponse response) {
+        logger.info("logout 호출");
+        Cookie tokenCookie = new Cookie("Authorization", null); // 토큰 담겨있는 HttpOnly쿠키 삭제
+        tokenCookie.setMaxAge(0); // 쿠키 즉시 만료되도록 설정
+        tokenCookie.setHttpOnly(true);
+        tokenCookie.setPath("/"); // 쿠키의 경로를 모든 경로로 설정
+
+        Cookie userIdCookie = new Cookie("userId", null); // userId 있는 쿠키 삭제
+        userIdCookie.setMaxAge(0);
+        userIdCookie.setPath("/");
+
+        response.addCookie(tokenCookie); // 응답에 쿠키 추가
+        response.addCookie(userIdCookie);
+
+        return ResponseEntity.ok().build(); // 상태코드 200과 빈 본문을 가진 응답 반환
     }
 
 

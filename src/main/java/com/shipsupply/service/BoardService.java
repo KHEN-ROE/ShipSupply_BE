@@ -3,8 +3,6 @@ package com.shipsupply.service;
 import com.shipsupply.domain.Board;
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.BoardRepository;
-import com.shipsupply.persistence.CommentRepository;
-import com.shipsupply.persistence.HitRepository;
 import com.shipsupply.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,35 +48,34 @@ public class BoardService {
     }
 
     public Board updateBoard(Long id, Board board) {
-        String userId = board.getUser().getId();
-        Optional<User> findUser = ur.findById(userId);
-        if (findUser.isPresent()) {
-            User u = findUser.get();
-            if(u.getId().equals(board.getUser().getId())){ // 유저정보 일치하면
-                Optional<Board> findBoard = br.findById(id); // 해당 게시글 탐색
-                if (findBoard.isPresent()) {
-                    Board b = findBoard.get();
-                    Optional.ofNullable(board.getTitle()).ifPresent(b::setTitle);
-                    Optional.ofNullable(board.getText()).ifPresent(b::setText);
-                    Optional.ofNullable(board.getDate()).ifPresent(b::setDate);
-
-                    return br.save(b);
-                }
+        Board b;
+        Optional<Board> findBoard = br.findById(id);
+        if(findBoard.isPresent()) {
+            b = findBoard.get();
+            if(b.getUser().getId().equals(board.getUser().getId())) {
+                Optional.ofNullable(b.getTitle()).ifPresent(b::setTitle);
+                Optional.ofNullable(b.getText()).ifPresent(b::setText);
+                Optional.ofNullable(b.getDate()).ifPresent(b::setDate);
+                return br.save(b);
+            } else {
+                throw new RuntimeException("일치하지 않는 사용자");
             }
-        }else {
-            throw new RuntimeException("권한이 없습니다");
+        } else {
+            throw new RuntimeException("존재하지 않는 게시글");
         }
-        return null;
     }
 
     public void deleteBoard(Long id, Board board) {
-        String userId = board.getUser().getId();
-        Optional<User> findUser = ur.findById(userId);
-        if (findUser.isPresent()) {
-            User u = findUser.get();
-            if(u.getId().equals(board.getUser().getId())){
+        Optional<Board> findBoard = br.findById(id);
+        if(findBoard.isPresent()) {
+            Board b = findBoard.get();
+            if(b.getUser().getId().equals(board.getUser().getId())) {
                 br.deleteById(id);
+            } else {
+                throw new RuntimeException("일치하지 않는 사용자");
             }
+        } else {
+            throw new RuntimeException("존재하지 않는 게시글");
         }
     }
 }
