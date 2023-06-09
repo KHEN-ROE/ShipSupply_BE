@@ -13,15 +13,22 @@ public class WishList {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     @Setter
-    String item;
+    private String item;
+
+    private String category;
+
+    private String machinery;
+
+    private String currency;
+
+    private Long price;
+
     @Setter
-    Long quantity;
-    Long price;
-    @Setter
-    String company;
-    Long leadtime;
-    String category;
+    private String company;
+
+    private Long leadtime;
 
     @ManyToOne
     @JoinColumn(name = "userId")

@@ -1,6 +1,8 @@
 package com.shipsupply.service;
 
+import com.shipsupply.domain.User;
 import com.shipsupply.domain.WishList;
+import com.shipsupply.persistence.UserRepository;
 import com.shipsupply.persistence.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,11 @@ public class WishListService {
     @Autowired
     WishListRepository wishListRepository;
 
-    public List<WishList> getList() {
-        return wishListRepository.findAll();
+    @Autowired
+    UserRepository userRepository;
+
+    public List<WishList> getList(String userId) {
+        return wishListRepository.findByUserId(userId);
     }
 
     public Optional<WishList> getDetail(Long id) {
@@ -31,7 +36,6 @@ public class WishListService {
         if(findWishList.isPresent()) {
             WishList w = findWishList.get();
             Optional.ofNullable(wishList.getCompany()).ifPresent(w::setCompany);
-            Optional.ofNullable(wishList.getQuantity()).ifPresent(w::setQuantity);
             Optional.ofNullable(wishList.getItem()).ifPresent(w::setItem);
             return wishListRepository.save(w);
         }

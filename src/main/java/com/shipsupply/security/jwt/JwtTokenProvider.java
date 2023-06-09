@@ -77,6 +77,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+            logger.info("유효하지 않은 토큰");
             return false;
         }
     }

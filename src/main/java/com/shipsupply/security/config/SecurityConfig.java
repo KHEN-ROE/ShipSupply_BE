@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
                 //  Spring Security 필터 체인을 통과하지만
                 //인증 없이도 접근이 허용됨. 사용자는 이 경로로 요청을 보낼 때 별도로 인증 절차를 거치지 않아도 됨
-                .antMatchers("/", "/oauth2/**", "/api/user/join", "/api/user/login").permitAll()
+                .antMatchers("/", "/oauth2/**", "/api/user/join", "/api/user/login", "/api/user/logout").permitAll()
                 //사용자의 권한은 사용자가 인증 과정을 거치면서 생성된 UserDetails 객체의 getAuthorities() 메서드를 통해 얻어짐 
                 // 이 메서드는 사용자의 권한을 나타내는 GrantedAuthority 객체의 컬렉션을 반환함
                 // 따라서, hasAnyRole("USER", "ADMIN") 설정은 실제로는 사용자의 GrantedAuthority 목록에 
