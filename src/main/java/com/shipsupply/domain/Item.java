@@ -3,9 +3,8 @@ package com.shipsupply.domain;
 import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -16,7 +15,7 @@ import java.util.Objects;
 public class Item {
 
     @Id //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //seq 말고 id 쓰는게 관례
+    private Long id;
     private String item;
     private String assembly;
     private String company;
@@ -28,6 +27,7 @@ public class Item {
     private String ship;
     private String subject;
     private Long price;
+    private Date date;
 
 
     @Override

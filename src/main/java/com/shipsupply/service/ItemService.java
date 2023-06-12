@@ -1,9 +1,11 @@
 package com.shipsupply.service;
 
 import com.shipsupply.domain.Item;
+import com.shipsupply.domain.WishList;
 import com.shipsupply.dto.CategoryDTO;
 import com.shipsupply.dto.CompanyDTO;
 import com.shipsupply.dto.ItemDTO;
+import com.shipsupply.dto.LeadtimeDTO;
 import com.shipsupply.persistence.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,11 @@ public class ItemService {
     // 특정 발주처 포함하는 모든 행 출력
     public List<Item> findByCompany(String company) {
         return itemRepository.findByCompanyContaining(company);
+    }
+
+    // 과거 리드타임 추이
+    public List<LeadtimeDTO> getPastLeadtime(String item, String category, String machinery, String company) {
+        return itemRepository.findByItemAndCategoryAndMachineryAndCompany(item, category, machinery, company);
     }
 
     // 카테고리 예측

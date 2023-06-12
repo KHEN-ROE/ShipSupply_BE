@@ -1,8 +1,11 @@
 package com.shipsupply.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,4 +36,6 @@ public class WishList {
     @ManyToOne
     @JoinColumn(name = "userId")
     User user;
+    
+    // 동일성 검증 해야됨
 }

@@ -1,9 +1,11 @@
 package com.shipsupply.controller;
 
 import com.shipsupply.domain.Item;
+import com.shipsupply.domain.WishList;
 import com.shipsupply.dto.CategoryDTO;
 import com.shipsupply.dto.CompanyDTO;
 import com.shipsupply.dto.ItemDTO;
+import com.shipsupply.dto.LeadtimeDTO;
 import com.shipsupply.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -69,6 +71,17 @@ public class ItemController {
     public List<Item> findByCompany(@RequestParam String company) {
         log.info("받은 발주처 : " + company);
         return itemService.findByCompany(company);
+    }
+
+    // 과거 리드타임 추이
+    @GetMapping("/pastLeadtime")
+    public List<LeadtimeDTO> getPastLeadtime(
+            @RequestParam("item") String item,
+            @RequestParam("category") String category,
+            @RequestParam("machinery") String machinery,
+            @RequestParam("company") String company
+    ) {
+        return itemService.getPastLeadtime(item, category, machinery, company);
     }
 
     // 분류모델 예측

@@ -34,7 +34,7 @@ public class UserService {
         User u = new User();
         if (findUser.isPresent()) {
             u = findUser.get();
-            if(u.getRole().equals("admin")){
+            if (u.getRole().equals("admin")) {
                 return u;
             }
         }
@@ -65,16 +65,20 @@ public class UserService {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if (encoder.matches(user.getPassword(), u.getPassword())) {
-                logger.info("userService에서 createToken 호출");
-                String token = JwtTokenProvider.createToken(u.getUsername(), u.getRole());
-                logger.info("생성한 토큰 : {}" , token);
-                map.put("token", token);
-                map.put("userId", u.getId());
-
-                return map;
+            if (u.isDeleted()) {
+                throw new RuntimeException("탈퇴한 회원");
             } else {
-                throw new RuntimeException("비밀번호 불일치");
+                if (encoder.matches(user.getPassword(), u.getPassword())) {
+                    logger.info("userService에서 createToken 호출");
+                    String token = JwtTokenProvider.createToken(u.getUsername(), u.getRole());
+                    logger.info("생성한 토큰 : {}", token);
+                    map.put("token", token);
+                    map.put("userId", u.getId());
+
+                    return map;
+                } else {
+                    throw new RuntimeException("비밀번호 불일치");
+                }
             }
         } else {
             throw new RuntimeException("존재하지 않는 회원");
@@ -89,14 +93,14 @@ public class UserService {
                 // ofNullable -> null이 아니면 ()안의 값으로 변경. null이면 Optional.empty() 반환
                 // ifPresent -> 값이 있으면() 안의 값 사용. 여기서는 기존값 그대로 둠. ::는 메서드 레퍼런스
                 Optional.ofNullable(user.getNewPassword()).ifPresent(p -> u.setPassword(encoder.encode(p))); // p는 임시 매개변수 이름. 딴걸로 바꿔도 됨
-                                                                                                             // 람다식 쓴 이유는 암호화 때문에
+                // 람다식 쓴 이유는 암호화 때문에
                 Optional.ofNullable(user.getEmail()).ifPresent(u::setEmail); // setEmail 메서드 직접참조 (email) -> u.setEmail(email)과 동일
                 Optional.ofNullable(user.getUsername()).ifPresent(u::setUsername);
                 Optional.ofNullable(user.getRole()).ifPresent(u::setRole);
                 Optional.ofNullable(user.getProvider()).ifPresent(u::setProvider);
                 Optional.ofNullable(user.getProviderId()).ifPresent(u::setProviderId);
                 return ur.save(u);
-            }else {
+            } else {
                 throw new RuntimeException("권한이 없습니다.");
             }
         } else {
@@ -108,11 +112,8 @@ public class UserService {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if (encoder.matches(user.getPassword(), u.getPassword())) {
-                ur.deleteById(user.getId());
-            }else {
-                throw new RuntimeException("권한이 없습니다.");
-            }
+            u.setDeleted(true);
+            ur.save(u);
         }
     }
 }

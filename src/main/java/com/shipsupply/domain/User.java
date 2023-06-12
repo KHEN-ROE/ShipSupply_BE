@@ -1,8 +1,12 @@
 package com.shipsupply.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -33,6 +37,10 @@ public class User {
     // 사용자의 소셜로그인 아이디
     @Setter
     private String providerId;
+
+    @Setter
+    private boolean deleted = false; // 유저 논리적 삭제(삭제된 것 처럼 보이지만 db에서 삭제X)를 위한 필드
+                                     // 반대는 물리적 삭제
 
     @Override
     public boolean equals(Object o) {

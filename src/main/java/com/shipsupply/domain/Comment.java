@@ -1,14 +1,13 @@
 package com.shipsupply.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -32,7 +31,7 @@ public class Comment {
     private User user;
 
     // 어느 게시글에서 쓴 건지
-    @ManyToOne 
+    @ManyToOne
     @JoinColumn(name = "boardId")
 //    @JsonIgnore
     private Board board;
