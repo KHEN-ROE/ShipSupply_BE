@@ -22,7 +22,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     // 과거 리드타임 추이
     // JPQL 사용하여 쿼리 작성.JPQL(Java Persistence Query Language)은 데이터베이스 테이블이 아닌 자바 엔티티 객체를 대상으로 하는 쿼리 언어
     // @Query는 해당 메서드에 JQPL 쿼리 지정하는데 사용
-    @Query("SELECT new com.shipsupply.dto.LeadtimeDTO(i.leadtime)" + // 쿼리가 리턴할 내용 지정.
+    @Query("SELECT new com.shipsupply.dto.LeadtimeDTO(i.leadtime, i.date)" + // 쿼리가 리턴할 내용 지정.
             // 각각의 결과를 LeatimeDTO 클래스의 새 인스턴스로 만들고, 그 생성자에 Leadtime 필드값 전달.
             "FROM Item i " + // 쿼리가 검색할 엔티티 지정. i는 별칭
             "WHERE i.item = :item " + // 검색 조건 지정. :item은 매개변수를 가리키는 바인딩 변수

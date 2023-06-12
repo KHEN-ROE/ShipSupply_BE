@@ -1,7 +1,6 @@
 package com.shipsupply.service;
 
 import com.shipsupply.domain.Item;
-import com.shipsupply.domain.WishList;
 import com.shipsupply.dto.CategoryDTO;
 import com.shipsupply.dto.CompanyDTO;
 import com.shipsupply.dto.ItemDTO;

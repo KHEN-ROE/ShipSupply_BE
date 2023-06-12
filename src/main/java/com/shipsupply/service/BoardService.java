@@ -5,6 +5,8 @@ import com.shipsupply.domain.User;
 import com.shipsupply.persistence.BoardRepository;
 import com.shipsupply.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,8 +22,8 @@ public class BoardService {
     @Autowired
     UserRepository ur;
 
-    public List<Board> getList() {
-        return br.findAll();
+    public Page<Board> getList(Pageable pageable) {
+        return br.findAll(pageable);
     }
 
     public Board getBoard(Long id) {

@@ -29,7 +29,6 @@ public class Item {
     private Long price;
     private Date date;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
