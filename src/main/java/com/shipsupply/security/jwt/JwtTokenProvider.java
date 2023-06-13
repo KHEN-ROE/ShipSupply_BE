@@ -43,7 +43,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
 
         Date now = new Date();
         // 1시간 토큰 유효
-        long tokenValidMillisecond = 1000L * 60 * 60;
+        long tokenValidMillisecond = 10000L * 600 * 600;
         return Jwts.builder()
                 .setClaims(claims) // 데이터
                 .setIssuedAt(now) // 토큰 발행일자

@@ -33,11 +33,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     // @Param은 JPQL 쿼리 내의 바인딩 변수에 실제 값 매핑하는데 사용(@Param("item" -> 바인딩 변수) String item은 실제값)
     // 따라서 이 쿼리는 Item 엔티티에서 각 매개변수에 해당하는 행을 찾고, 그 행의 리드타임 값을 가진 LeadtimeDTO 인스턴스의 리스트 반환
     List<LeadtimeDTO> findDuplicates(@Param("item") String item, @Param("category") String category, @Param("company") String company);
+    // default 메서드는 인터페이스에 메소드 선언과 함께 구현을 제공하는 방법
+    // 이 인터페이스를 구현하는 클래스는 findByItemAndCategoryAndCompanyOrderByDate 메서드를 재정의할 수도 있고, 그대로 구현하는 것도 가능
     default List<LeadtimeDTO> findByItemAndCategoryAndCompanyOrderByDate(String item, String category, String company) {
+        // findDuplicates 메서드 호출하여 결과 리스트를 가져오고,
         List<LeadtimeDTO> duplicates = findDuplicates(item, category, company);
-
-        return duplicates.stream().distinct().collect(Collectors.toList());
-    }
+        // 이 리스트에서 중복을 제거하여 리턴
+        return duplicates.stream().distinct().collect(Collectors.toList()); // LeadtimeDTO 클래스에는 equals, hashCode메서드가 오버라이딩 돼있어야 함.
+                                                                            // 이 두 메서드는 동일성 비교하는데 사용되며, distinct메서드가 중복을 어떻게 제거하는지 판단
+    } // JPQL 쿼리를 사용하여 모든 결과를 가져오고, Stream API사용하여 LeadtimeDTO 객체의 리스트에서 중복제거
 
     @Query("SELECT DISTINCT new com.shipsupply.dto.CategoryDTO(i.category) FROM Item i WHERE i.category LIKE %:category%")
     List<CategoryDTO> findByCategoryLike(@Param("category") String category);
