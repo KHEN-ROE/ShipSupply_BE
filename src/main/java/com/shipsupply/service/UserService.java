@@ -112,8 +112,10 @@ public class UserService {
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            u.setDeleted(true);
-            ur.save(u);
+            if(encoder.matches(user.getPassword(), u.getPassword())) {
+                u.setDeleted(true); // 논리적 삭제. db에서는 삭제 안 되지만, 애플리케이션 상에서는 삭제된 것처럼 보임
+                ur.save(u);
+            }
         }
     }
 }

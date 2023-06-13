@@ -31,7 +31,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "AND i.company = :company")
     // @Param은 JPQL 쿼리 내의 바인딩 변수에 실제 값 매핑하는데 사용(@Param("item" -> 바인딩 변수) String item은 실제값)
     // 따라서 이 쿼리는 Item 엔티티에서 각 매개변수에 해당하는 행을 찾고, 그 행의 리드타임 값을 가진 LeadtimeDTO 인스턴스의 리스트 반환
-    List<LeadtimeDTO> findByItemAndCategoryAndMachineryAndCompany(@Param("item") String item, @Param("category") String category, @Param("machinery") String machinery, @Param("company") String company);
+    List<LeadtimeDTO> findByItemAndCategoryAndMachineryAndCompanyOrderByDate(@Param("item") String item, @Param("category") String category, @Param("machinery") String machinery, @Param("company") String company);
 
     @Query("SELECT DISTINCT new com.shipsupply.dto.CategoryDTO(i.category) FROM Item i WHERE i.category LIKE %:category%")
     List<CategoryDTO> findByCategoryLike(@Param("category") String category);
