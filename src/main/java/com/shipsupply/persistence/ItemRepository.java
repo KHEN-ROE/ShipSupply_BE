@@ -10,7 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.swing.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByCategoryContaining(String category);
@@ -27,11 +29,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "FROM Item i " + // 쿼리가 검색할 엔티티 지정. i는 별칭
             "WHERE i.item = :item " + // 검색 조건 지정. :item은 매개변수를 가리키는 바인딩 변수
             "AND i.category = :category " +
-            "AND i.machinery = :machinery " +
             "AND i.company = :company")
     // @Param은 JPQL 쿼리 내의 바인딩 변수에 실제 값 매핑하는데 사용(@Param("item" -> 바인딩 변수) String item은 실제값)
     // 따라서 이 쿼리는 Item 엔티티에서 각 매개변수에 해당하는 행을 찾고, 그 행의 리드타임 값을 가진 LeadtimeDTO 인스턴스의 리스트 반환
-    List<LeadtimeDTO> findByItemAndCategoryAndMachineryAndCompanyOrderByDate(@Param("item") String item, @Param("category") String category, @Param("machinery") String machinery, @Param("company") String company);
+    List<LeadtimeDTO> findDuplicates(@Param("item") String item, @Param("category") String category, @Param("company") String company);
+    default List<LeadtimeDTO> findByItemAndCategoryAndCompanyOrderByDate(String item, String category, String company) {
+        List<LeadtimeDTO> duplicates = findDuplicates(item, category, company);
+
+        return duplicates.stream().distinct().collect(Collectors.toList());
+    }
 
     @Query("SELECT DISTINCT new com.shipsupply.dto.CategoryDTO(i.category) FROM Item i WHERE i.category LIKE %:category%")
     List<CategoryDTO> findByCategoryLike(@Param("category") String category);

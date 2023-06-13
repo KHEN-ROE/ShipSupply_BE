@@ -78,10 +78,9 @@ public class ItemController {
     public List<LeadtimeDTO> getPastLeadtime(
             @RequestParam("item") String item,
             @RequestParam("category") String category,
-            @RequestParam("machinery") String machinery,
             @RequestParam("company") String company
     ) {
-        return itemService.getPastLeadtime(item, category, machinery, company);
+        return itemService.getPastLeadtime(item, category, company);
     }
 
     // 분류모델 예측
