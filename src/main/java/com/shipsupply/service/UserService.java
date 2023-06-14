@@ -109,13 +109,22 @@ public class UserService {
     }
 
     public void delete(User user) {
+
         Optional<User> findUser = ur.findById(user.getId());
         if (findUser.isPresent()) {
             User u = findUser.get();
-            if(encoder.matches(user.getPassword(), u.getPassword())) {
-                u.setDeleted(true); // 논리적 삭제. db에서는 삭제 안 되지만, 애플리케이션 상에서는 삭제된 것처럼 보임
-                ur.save(u);
+            if (user.getPassword().equals(user.getConfirmPassword())) {
+                if (encoder.matches(user.getPassword(), u.getPassword())) {
+                    u.setDeleted(true); // 논리적 삭제. db에서는 삭제 안 되지만, 애플리케이션 상에서는 삭제된 것처럼 보임
+                    ur.save(u);
+                } else {
+                    throw new RuntimeException("db 정보 불일치");
+                }
+            } else {
+                throw new RuntimeException("두 비밀번호 불일치");
             }
+        } else {
+            throw new RuntimeException("존재하지 않는 회원");
         }
     }
 }

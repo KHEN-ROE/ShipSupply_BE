@@ -24,6 +24,9 @@ public class User {
     private String password;
     @Setter
     private String newPassword;
+
+    private String confirmPassword;
+
     @Setter
     private String email;
     @Setter
