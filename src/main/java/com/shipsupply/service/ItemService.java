@@ -1,10 +1,7 @@
 package com.shipsupply.service;
 
 import com.shipsupply.domain.Item;
-import com.shipsupply.dto.CategoryDTO;
-import com.shipsupply.dto.CompanyDTO;
-import com.shipsupply.dto.ItemDTO;
-import com.shipsupply.dto.LeadtimeDTO;
+import com.shipsupply.dto.*;
 import com.shipsupply.persistence.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +63,16 @@ public class ItemService {
         List<LeadtimeDTO> getList = itemRepository.findByItemAndCategoryAndCompanyOrderByDate(item, category,  company);
         log.info("getList : " + getList);
         return getList;
+    }
+
+    // 리드타임 분포
+    public List<LeadtimeDistributionDTO> getLeadtimeDistribution() {
+        return itemRepository.findByLeadtimeAndCount();
+    }
+
+    // 카테고리 분포
+    public List<CategoryDistributionDTO> getCategoryDistribution() {
+        return itemRepository.findByCategoryAndCount();
     }
 
     // 카테고리 예측

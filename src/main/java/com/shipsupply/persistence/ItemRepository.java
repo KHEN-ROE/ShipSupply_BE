@@ -2,10 +2,7 @@ package com.shipsupply.persistence;
 
 import com.shipsupply.domain.Item;
 import com.shipsupply.domain.WishList;
-import com.shipsupply.dto.CategoryDTO;
-import com.shipsupply.dto.CompanyDTO;
-import com.shipsupply.dto.ItemDTO;
-import com.shipsupply.dto.LeadtimeDTO;
+import com.shipsupply.dto.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -42,6 +39,14 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
         return duplicates.stream().distinct().collect(Collectors.toList()); // LeadtimeDTO 클래스에는 equals, hashCode메서드가 오버라이딩 돼있어야 함.
                                                                             // 이 두 메서드는 동일성 비교하는데 사용되며, distinct메서드가 중복을 어떻게 제거하는지 판단
     } // JPQL 쿼리를 사용하여 모든 결과를 가져오고, Stream API사용하여 LeadtimeDTO 객체의 리스트에서 중복제거
+
+    // 리드타임 분포
+    @Query("SELECT new com.shipsupply.dto.LeadtimeDistributionDTO(i.leadtime, COUNT(i)) FROM Item i GROUP BY i.leadtime ORDER BY i.leadtime")
+    List<LeadtimeDistributionDTO> findByLeadtimeAndCount();
+
+    // 카테고리 분포
+    @Query("SELECT new com.shipsupply.dto.CategoryDistributionDTO(i.category, COUNT(i)) FROM Item i GROUP BY i.category ORDER BY i.category")
+    List<CategoryDistributionDTO> findByCategoryAndCount();
 
     @Query("SELECT DISTINCT new com.shipsupply.dto.CategoryDTO(i.category) FROM Item i WHERE i.category LIKE %:category%")
     List<CategoryDTO> findByCategoryLike(@Param("category") String category);

@@ -23,8 +23,11 @@ public class Board {
 
     @Setter
     private String title;
+
     @Setter
+    @Column(length = 1000) // 텍스트 길이 1000으로 설정
     private String text;
+
     @Setter
     private Date date;
 
