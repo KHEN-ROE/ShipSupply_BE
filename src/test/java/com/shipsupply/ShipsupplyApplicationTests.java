@@ -36,8 +36,8 @@ class ShipsupplyApplicationTests {
     // Board 객체가 같은 seq를 가지고 있을 때, equals, hashcode메서드가 정삭적으로 동작하는지 검증
     @Test
     void testEquality() {
-        User user1 = new User("testId", "testPassWord", "testEmail", "testUsername", "testRole", "testProvider", "testProviderId");
-        User user2 = new User("testId", "testPassWord", "testEmail", "testUsername", "testRole", "testProvider", "testProviderId");
+        User user1 = new User("testId", "testPassWord", "newpwd", "conpwd",  "testEmail", "testUsername", "testRole", "testProvider", "testProviderId" ,false);
+        User user2 = new User("testId", "testPassWord", "newpwd", "conpwd",  "testEmail", "testUsername", "testRole", "testProvider", "testProviderId" ,false);
 
 
         Board board1 = new Board(1L, "title", "text", new Date(), user1);

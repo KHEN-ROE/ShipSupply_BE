@@ -92,7 +92,6 @@ public class ItemController {
         return itemService.getCategoryDistribution();
     }
 
-
     // 분류모델 예측
     @PostMapping("/predict/classify")
     public ResponseEntity<String> predCategory(@RequestBody Map<String, String> data) {

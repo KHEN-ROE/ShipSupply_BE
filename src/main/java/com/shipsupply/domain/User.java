@@ -43,7 +43,7 @@ public class User {
 
     @Setter
     private boolean deleted = false; // 유저 논리적 삭제(삭제된 것 처럼 보이지만 db에서 삭제X)를 위한 필드
-                                     // 반대는 물리적 삭제
+                                     // 반대는 물리적 삭제(db에서 실제로 삭제)
 
     @Override
     public boolean equals(Object o) {

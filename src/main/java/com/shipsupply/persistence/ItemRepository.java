@@ -48,12 +48,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT new com.shipsupply.dto.CategoryDistributionDTO(i.category, COUNT(i)) FROM Item i GROUP BY i.category ORDER BY i.category")
     List<CategoryDistributionDTO> findByCategoryAndCount();
 
+    // 검색창에서 카테고리만 나오게
     @Query("SELECT DISTINCT new com.shipsupply.dto.CategoryDTO(i.category) FROM Item i WHERE i.category LIKE %:category%")
     List<CategoryDTO> findByCategoryLike(@Param("category") String category);
 
+    // 검색창에서 발주처만 나오게
     @Query("SELECT DISTINCT new com.shipsupply.dto.CompanyDTO(i.company) FROM Item i WHERE i.company LIKE %:company%")
     List<CompanyDTO> findByCompanyLike(@Param("company") String company);
 
+    // 검색창에서 아이템만 나오게
     @Query("SELECT DISTINCT new com.shipsupply.dto.ItemDTO(i.item) FROM Item i WHERE i.item LIKE %:item%")
     List<ItemDTO> findByItemLike(@Param("item") String item);
 
