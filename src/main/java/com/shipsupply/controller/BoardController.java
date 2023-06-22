@@ -46,6 +46,7 @@ public class BoardController {
 
     @PutMapping("/update/{id}")
     public Board updateBoard(@PathVariable Long id, @RequestBody Board board) {
+        logger.info("받은 정보 : " + id  + "," + board);
         return bs.updateBoard(id, board);
     }
 

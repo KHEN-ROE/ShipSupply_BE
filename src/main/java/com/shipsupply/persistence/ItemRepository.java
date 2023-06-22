@@ -45,8 +45,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<LeadtimeDistributionDTO> findByLeadtimeAndCount();
 
     // 카테고리 분포
-    @Query("SELECT new com.shipsupply.dto.CategoryDistributionDTO(i.category, COUNT(i)) FROM Item i GROUP BY i.category ORDER BY i.category")
-    List<CategoryDistributionDTO> findByCategoryAndCount();
+    @Query("SELECT new com.shipsupply.dto.CategoryDistributionDTO(i.category, COUNT(i)) FROM Item i GROUP BY i.category ORDER BY COUNT(i) DESC")
+    List<CategoryDistributionDTO> findByCategoryAndCountOrderByCategoryCountDesc();
 
     // 검색창에서 카테고리만 나오게
     @Query("SELECT DISTINCT new com.shipsupply.dto.CategoryDTO(i.category) FROM Item i WHERE i.category LIKE %:category%")

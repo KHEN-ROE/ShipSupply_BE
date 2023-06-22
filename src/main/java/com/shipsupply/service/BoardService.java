@@ -4,15 +4,16 @@ import com.shipsupply.domain.Board;
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.BoardRepository;
 import com.shipsupply.persistence.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class BoardService {
 
@@ -55,9 +56,13 @@ public class BoardService {
         if(findBoard.isPresent()) {
             b = findBoard.get();
             if(b.getUser().getId().equals(board.getUser().getId())) {
-                Optional.ofNullable(b.getTitle()).ifPresent(b::setTitle);
-                Optional.ofNullable(b.getText()).ifPresent(b::setText);
-                Optional.ofNullable(b.getDate()).ifPresent(b::setDate);
+                Optional.ofNullable(board.getTitle()).ifPresent(b::setTitle); //board.getTitle()이 null이 아닌지 체크(ofNullable)
+                                                                                // Optional 객체가 값이 존재하면(ifPresent) b의 title을(b::setTitle) board.getTitle()로 변경
+                                                                                // if문으로 바꿀 수 있다.
+                                                                                //if(board.getTitle() != null) {
+                                                                                //b.setTitle(board.getTitle()); }
+                Optional.ofNullable(board.getText()).ifPresent(b::setText);
+                Optional.ofNullable(board.getDate()).ifPresent(b::setDate);
                 return br.save(b);
             } else {
                 throw new RuntimeException("일치하지 않는 사용자");

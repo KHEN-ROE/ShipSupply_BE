@@ -72,7 +72,7 @@ public class ItemService {
 
     // 카테고리 분포
     public List<CategoryDistributionDTO> getCategoryDistribution() {
-        return itemRepository.findByCategoryAndCount();
+        return itemRepository.findByCategoryAndCountOrderByCategoryCountDesc();
     }
 
     // 카테고리 예측
