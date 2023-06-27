@@ -3,6 +3,8 @@ package com.shipsupply.controller;
 import com.shipsupply.domain.Board;
 import com.shipsupply.domain.User;
 import com.shipsupply.service.BoardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class BoardController {
     // Page<Board> -> Page 객체로 감싸서 반환하면,
     // 클라이언트에서는 해당 페이지의 게시글 데이터뿐만 아니라 전체 페이지 수, 현재 페이지 번호 등의 페이지네이션 정보도 함께 받을 수 있음
     // 클라이언트의 요청에 따른 페이지네이션 처리를 위해 Pageable을 활용
+    @Operation(summary = "게시글 목록 보기")
+    @ApiResponse(responseCode = "200", description = "게시글 목록이 정상적으로 조회되었습니다.")
     @GetMapping("/view")
     public Page<Board> getList(@RequestParam int page, @RequestParam int size) { // 요청된 페이지 번호, 한 페이지에 보여줄 게시글 개수
         logger.info("page : " + page + "," + "size : " + size);
@@ -32,24 +36,32 @@ public class BoardController {
         return bs.getList(pageable);
     }
 
+    @Operation(summary = "게시글 상세 보기")
+    @ApiResponse(responseCode = "200", description = "게시글 상세 정보가 정상적으로 조회되었습니다.")
     @GetMapping("/view/{id}")
     public Board getBoard(@PathVariable Long id) {
         logger.info("글 번호 : " + id);
         return bs.getBoard(id);
     }
 
+    @Operation(summary = "게시글 작성")
+    @ApiResponse(responseCode = "200", description = "게시글이 정상적으로 작성되었습니다.")
     @PostMapping("/add")
     public Board addBoard(@RequestBody Board board) {
         logger.info("받은 게시글 정보 : {}", board);
         return bs.addBoard(board);
     }
 
+    @Operation(summary = "게시글 수정")
+    @ApiResponse(responseCode = "200", description = "게시글이 정상적으로 수정되었습니다.")
     @PutMapping("/update/{id}")
     public Board updateBoard(@PathVariable Long id, @RequestBody Board board) {
         logger.info("받은 정보 : " + id  + "," + board);
         return bs.updateBoard(id, board);
     }
 
+    @Operation(summary = "게시글 삭제")
+    @ApiResponse(responseCode = "200", description = "게시글이 정상적으로 삭제되었습니다.")
     @DeleteMapping("/delete/{id}")
     public void deleteBoard(@PathVariable Long id, @RequestBody Board board) {
         bs.deleteBoard(id, board);
