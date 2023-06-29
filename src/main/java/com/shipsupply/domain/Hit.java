@@ -29,7 +29,7 @@ public class Hit {
 //    @JsonIgnore
     private Comment comment;
 
-    @Override
+    @Override // 동일성 검증
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Hit hit)) return false;

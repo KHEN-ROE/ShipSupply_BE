@@ -1,5 +1,6 @@
 package com.shipsupply.security.jwt;
 
+import com.shipsupply.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -13,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
@@ -36,14 +36,12 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     );
 
     // Jwt 토큰 생성
-    public static String createToken(String userPk, String role) {
+    public static String createToken(String userPk, String role, long tokenValidMillisecond) {
         logger.info("createToken 호출");
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("role", role); // 토큰에 role을 추가. 나중에 토큰을 디코딩할 때 role을 검증하려고
 
         Date now = new Date();
-        // 1시간 토큰 유효(1000L * 60 * 60) - 1000밀리초 * 60분 * 60초
-        long tokenValidMillisecond = 1000L * 60 * 60;
         return Jwts.builder()
                 .setClaims(claims) // 데이터
                 .setIssuedAt(now) // 토큰 발행일자
@@ -52,14 +50,13 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
                 .compact();
     }
 
-    public String resolveTokenFromCookie(HttpServletRequest request) {
-        logger.info("resolveTokenFromCookie 호출");
-        logger.info("받은 쿠키 : " + request);
+    public String resolveTokenFromCookie(HttpServletRequest request, String tokenName) {
+        logger.info(tokenName + "토큰을 검색하는 resolveTokenFromCookie 호출");
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for(Cookie cookie : cookies) {
-                if("Authorization".equals(cookie.getName())) {
-                    logger.info("쿠키에 있는 토큰 : " + cookie.getValue());
+                if(tokenName.equals(cookie.getName())) {
+                    logger.info("쿠키에 있는 : " + tokenName + cookie.getValue());
                     return cookie.getValue();
                 }
             }
@@ -76,6 +73,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
             // 위조되지 않았다면 페이로드(claims) 리턴
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
+
         } catch (Exception e) {
             logger.info("유효하지 않은 토큰");
             return false;
@@ -96,6 +94,13 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
 
         return new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
 
+    }
+
+    // 토큰에서 role 추출
+    public String getRole(String token) {
+        logger.info("getRole 호출");
+        Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        return claims.get("role").toString();
     }
 
     // Jwt 토큰에서 회원 구별 정보 추출

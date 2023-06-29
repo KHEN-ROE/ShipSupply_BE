@@ -1,10 +1,14 @@
 package com.shipsupply.security.jwt;
 
 import com.shipsupply.security.user.UserPrincipal;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -12,8 +16,12 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -32,15 +40,29 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
+
         logger.info("doFilter 호출");
         // resolveToken : Request의 Header에서 token 파싱
 //        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-        String token = jwtTokenProvider.resolveTokenFromCookie((HttpServletRequest) request);
+        String accessToken = jwtTokenProvider.resolveTokenFromCookie((HttpServletRequest) request, "accessToken");
+        String refreshToken = jwtTokenProvider.resolveTokenFromCookie((HttpServletRequest) request, "refreshToken");
+
         // validateToken : Jwt 토큰의 유효성 + 만료일자 확인
-        if (token != null && jwtTokenProvider.validateToken(token)) { // 로그인 요청시 토큰이 없어도 permitAll 돼있어서 여길 통과함
+        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) { // 로그인 요청시 토큰이 없어도 permitAll 돼있어서 여길 통과함
             // getAuthentication : Jwt 토큰으로 인증 정보 조회
-            Authentication auth = jwtTokenProvider.getAuthentication(token);
+            Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(auth);
+        } else if (refreshToken != null && jwtTokenProvider.validateToken(refreshToken)) {
+            // 리프레시 토큰이 유효하면 새로운 엑세스 토큰을 발급하고 응답에 넣어줌
+            String username = jwtTokenProvider.getUserPk(refreshToken);
+            String role = jwtTokenProvider.getRole(refreshToken);
+            String newAccessToken = JwtTokenProvider.createToken(username, role, 1000L * 60);
+
+            Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken);
+            accessTokenCookie.setHttpOnly(true);
+            accessTokenCookie.setPath("/");
+            accessTokenCookie.setDomain("localhost");
+            ((HttpServletResponse) response).addCookie(accessTokenCookie);
         }
         filterChain.doFilter(request, response);
     }

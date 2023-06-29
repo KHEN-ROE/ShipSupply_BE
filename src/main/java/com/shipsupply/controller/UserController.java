@@ -52,14 +52,22 @@ public class UserController {
 
         Map<String, Object> map = userService.login(user);
 
-        String token = (String) map.get("token");
-        logger.info("생성한 토큰 : " + token);
+        String accessToken = (String) map.get("accessToken");
+        String refreshToken = (String) map.get("refreshToken");
 
-        Cookie tokenCookie = new Cookie("Authorization", token);
-        tokenCookie.setHttpOnly(true);
-        tokenCookie.setPath("/"); // 쿠키의 경로를 모든 경로로 설정
-        tokenCookie.setDomain("localhost"); // 클라이언트 도메인 설정
-        response.addCookie(tokenCookie);
+        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/"); // 쿠키의 경로를 모든 경로로 설정
+        accessTokenCookie.setDomain("localhost"); // 클라이언트 도메인 설정
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setDomain("localhost");
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
+
         logger.info("리턴할 response : " + response);
 
         return ResponseEntity.ok(map);
@@ -70,16 +78,24 @@ public class UserController {
     @PostMapping("logout")
     public ResponseEntity<?> logout(@RequestBody User user, HttpServletResponse response) {
         logger.info("logout 호출");
-        Cookie tokenCookie = new Cookie("Authorization", null); // 토큰 담겨있는 HttpOnly쿠키 삭제
-        tokenCookie.setMaxAge(0); // 쿠키 즉시 만료되도록 설정
-        tokenCookie.setHttpOnly(true);
-        tokenCookie.setPath("/"); // 쿠키의 경로를 모든 경로로 설정
+
+        Cookie acccessTokenCookie = new Cookie("accessToken", null); // 토큰 담겨있는 HttpOnly쿠키 삭제
+        acccessTokenCookie.setMaxAge(0); // 쿠키 즉시 만료되도록 설정
+        acccessTokenCookie.setHttpOnly(true);
+        acccessTokenCookie.setPath("/"); // 쿠키의 경로를 모든 경로로 설정
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null); // 토큰 담겨있는 HttpOnly쿠키 삭제
+        refreshTokenCookie.setMaxAge(0); // 쿠키 즉시 만료되도록 설정
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/"); // 쿠키의 경로를 모든 경로로 설정
+
 
         Cookie userIdCookie = new Cookie("userId", null); // userId 있는 쿠키 삭제
         userIdCookie.setMaxAge(0);
         userIdCookie.setPath("/");
 
-        response.addCookie(tokenCookie); // 응답에 쿠키 추가
+        response.addCookie(acccessTokenCookie); // 응답에 쿠키 추가
+        response.addCookie(refreshTokenCookie);
         response.addCookie(userIdCookie);
 
         return ResponseEntity.ok().build(); // 상태코드 200과 빈 본문을 가진 응답 반환

@@ -33,7 +33,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication) throws IOException {
         logger.info("onAuthenticationSuccess 호출");
         String userRole = ((GrantedAuthority) authentication.getAuthorities().toArray()[0]).getAuthority(); // 첫 번째 권한을 가져옴(문자열로)
-        String token = JwtTokenProvider.createToken(authentication.getName(), userRole);
+        String token = JwtTokenProvider.createToken(authentication.getName(), userRole, 1000L * 60 * 60);
         logger.info("생성한 oauth2 토큰: {}" , token);
 //         헤더에 토큰 포함하여 전달(토큰 전달 방법은 1. 헤더에 포함 2. 쿠키에 포함 3. 바디에 포함 3개가 있음)
 

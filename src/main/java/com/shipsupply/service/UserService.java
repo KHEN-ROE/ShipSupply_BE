@@ -70,9 +70,15 @@ public class UserService {
             } else {
                 if (encoder.matches(user.getPassword(), u.getPassword())) {
                     logger.info("userService에서 createToken 호출");
-                    String token = JwtTokenProvider.createToken(u.getUsername(), u.getRole());
-                    logger.info("생성한 토큰 : {}", token);
-                    map.put("token", token);
+                    // access token 생성(유효기간 1시간) (테스트 위해 1분으로 임시변경)
+                    String accessToken = JwtTokenProvider.createToken(u.getUsername(), u.getRole(), 1000L * 60 * 60);
+                    // refresh token 생성(유효기간 2주)
+                    String refreshToken = JwtTokenProvider.createToken(u.getUsername(), u.getRole(), 1000L * 60 * 60 * 24 * 14);
+                    logger.info("생성한 access 토큰 : {}", accessToken);
+                    logger.info("생성한 refresh 토큰 : {}", refreshToken);
+
+                    map.put("accessToken", accessToken);
+                    map.put("refreshToken", refreshToken);
                     map.put("userId", u.getId());
 
                     return map;
