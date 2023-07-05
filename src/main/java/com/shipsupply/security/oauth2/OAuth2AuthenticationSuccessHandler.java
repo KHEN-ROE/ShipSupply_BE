@@ -1,6 +1,6 @@
 package com.shipsupply.security.oauth2;
 
-import com.shipsupply.security.jwt.JwtTokenProvider;
+import com.shipsupply.security.token.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

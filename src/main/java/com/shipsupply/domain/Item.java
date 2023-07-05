@@ -23,6 +23,7 @@ public class Item {
     private Long leadtime;
     private String machinery;
     private String partNo1;
+    private String partNo2;
     private String currency;
     private String ship;
     private String subject;

@@ -2,7 +2,7 @@ package com.shipsupply.service;
 
 import com.shipsupply.domain.User;
 import com.shipsupply.persistence.UserRepository;
-import com.shipsupply.security.jwt.JwtTokenProvider;
+import com.shipsupply.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

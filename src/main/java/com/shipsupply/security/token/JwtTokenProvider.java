@@ -1,6 +1,5 @@
-package com.shipsupply.security.jwt;
+package com.shipsupply.security.token;
 
-import com.shipsupply.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

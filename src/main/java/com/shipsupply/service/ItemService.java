@@ -91,8 +91,10 @@ public class ItemService {
         Map<String, String> map= new HashMap<>();
         map.put("a", data.get("Machinery"));
         map.put("b", data.get("Assembly"));
-        map.put("c", data.get("PartNo1"));
-        map.put("d", data.get("Item"));
+        map.put("c", data.get("Company"));
+        map.put("d", data.get("PartNo1"));
+        map.put("e", data.get("PartNo2"));
+        map.put("f", data.get("Item"));
 
         HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
 
